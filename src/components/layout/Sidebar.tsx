@@ -7,8 +7,8 @@ import { useState } from "react";
 import { HiMenu, HiX } from "react-icons/hi";
 
 const navItems = [
-  { href: "/dashboard", label: "Início", icon: <FaChartBar /> },
-  { href: "/dashboard/workouts", label: "Treinos", icon: <FaPersonSwimming /> },
+  { href: "/dashboard", label: "Início", icon: <FaChartBar />, pathMatch: "/dashboard" },
+  { href: "/dashboard/workouts", label: "Treinos", icon: <FaPersonSwimming />, pathMatch: "/workouts" },
 ];
 
 export default function Sidebar() {

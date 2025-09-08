@@ -1,25 +1,27 @@
 "use client";
 
 import { useWorkouts } from "@/hooks/useWorkouts";
+import { formatDate, formatTime, formatTimeToMinutes } from "@/utils";
 import Skeleton from "react-loading-skeleton";
-
-function formatTime(seconds: number) {
-  const hours = Math.floor(seconds / 3600);
-  const minutes = Math.floor((seconds % 3600) / 60);
-  const secs = seconds % 60;
-  return `${hours.toString().padStart(2, '0')}:${minutes
-    .toString()
-    .padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-}
+import { Button } from "../lib/Button";
+import { MdDelete } from "react-icons/md";
+import { FaArrowRight } from "react-icons/fa";
+import Link from "next/link";
 
 export function WorkoutTable() {
   const { workouts, remove } = useWorkouts();
+  if (workouts.isLoading || workouts.isFetching)
+    return <Skeleton count={10} height={40} />;
 
-  if (workouts.isLoading || workouts.isFetching) return <Skeleton count={10} height={40} />;
+  const data = workouts.data?.workouts || [];
 
-  const sortedWorkouts = [...(workouts.data?.workouts || [])].sort(
-    (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
-  );
+  if (data.length === 0 && !workouts.isLoading && !workouts.isFetching) {
+    return (
+      <div className="text-center text-gray-500 mt-10">
+        Nenhum treino registrado ainda.
+      </div>
+    );
+  }
 
   return (
     <div className="overflow-x-auto">
@@ -35,26 +37,55 @@ export function WorkoutTable() {
             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
               Duração
             </th>
+            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              Ritmo (50m)
+            </th>
+            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              Ritmo (100m)
+            </th>
             <th className="px-6 py-3"></th>
           </tr>
         </thead>
         <tbody className="bg-white divide-y divide-gray-200">
-          {sortedWorkouts.map((w) => (
+          {data.map((w) => (
             <tr key={w.id} className="hover:bg-gray-50 transition">
-              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{w.meters}m</td>
               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
-                {new Date(w.date).toLocaleDateString()}
+                {w.meters}m
+              </td>
+              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+                {formatDate(w.date)}
               </td>
               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
                 {formatTime(w.timeInSeconds)}
               </td>
+              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+                {w.rhythmPer50m ? formatTime(w.rhythmPer50m, true) : "N/A"}
+              </td>
+              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+                {w.rhythmPer100m ? formatTime(w.rhythmPer100m, true) : "N/A"}
+              </td>
               <td className="px-6 py-4 whitespace-nowrap text-sm text-right">
-                <button
-                  onClick={() => remove.mutate(w.id)}
-                  className="text-red-500 hover:text-red-700 font-semibold"
-                >
-                  Excluir
-                </button>
+                <div className="flex gap-2 justify-end">
+                  <Button
+                    onClick={() => remove.mutate(w.id)}
+                    variant="red"
+                    isIconButton
+                    filled={false}
+                  >
+                    <MdDelete size={18} />
+                  </Button>
+
+                  <Button
+                    onClick={() => {}}
+                    variant="red"
+                    isIconButton
+                    filled={false}
+                  >
+                    <Link href={`/dashboard/workouts/${w.id}/`}>
+                      <FaArrowRight size={18} />
+                    </Link>
+                  </Button>
+                </div>
               </td>
             </tr>
           ))}

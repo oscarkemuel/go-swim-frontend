@@ -15,6 +15,15 @@ export function useWorkouts() {
     queryFn: () => workoutService.getAll(),
   })
 
+  const getWorkoutById = (id: number) => {
+    return useQuery({
+      queryKey: ["workout", id],
+      queryFn: () => workoutService.getById(id),
+      enabled: !!id,
+      refetchOnWindowFocus: false,
+    });
+  }
+
   const create = useMutation({
     mutationFn: workoutService.create,
     onSuccess: () => {
@@ -36,5 +45,5 @@ export function useWorkouts() {
     }
   })
 
-  return { workouts, create, update, remove };
+  return { workouts, getWorkoutById, create, update, remove };
 }

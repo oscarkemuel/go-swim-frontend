@@ -4,3 +4,7 @@ export interface DashboardCardsData {
   totalKms: number;
 }
 
+export interface DashboardLast10DayChartData {
+  metersByDate: { date: string; totalMeters: number }[];
+}
+
