@@ -3,11 +3,11 @@ import { Workout } from "@/models/Workout";
 import { GetAllResponse, GetByIdResponse } from "./types";
 
 export const workoutService = {
-  getAll: () => api<GetAllResponse>({ url: "/workouts/my" }),
+  getAll: () => api<GetAllResponse>({ url: "/workouts/my" }).then(res => res.data),
   getById: (id: number) =>
-    api<GetByIdResponse>({ url: `/workouts/${id}` }),
-  create: (workout: Workout) =>
-    api<{ workout: Workout }>({
+    api<GetByIdResponse>({ url: `/workouts/${id}` }).then(res => res.data),
+  create: (workout: Partial<Workout>) =>
+    api({
       url: "/workouts",
       options: { method: "POST", body: JSON.stringify(workout) },
     }),
@@ -17,8 +17,8 @@ export const workoutService = {
       options: { method: "PUT", body: JSON.stringify(data) },
     }),
   delete: (id: number) =>
-    api<{ workout: Workout }>({
+    api({
       url: `/workouts/${id}`,
       options: { method: "DELETE" },
-    }),
+    })
 };

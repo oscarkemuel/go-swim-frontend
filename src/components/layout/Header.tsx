@@ -6,7 +6,7 @@ interface HeaderProps {
 
 export default function Header({ title, subtitle, rightElement }: HeaderProps) {
   return (
-    <div className="w-full mb-8 flex items-center justify-between">
+    <div className="w-full mb-8 flex items-center justify-between flex-wrap gap-4">
       <div>
         <h1 className="text-lg font-semibold text-[#06152B]">{title}</h1>
         {subtitle && (

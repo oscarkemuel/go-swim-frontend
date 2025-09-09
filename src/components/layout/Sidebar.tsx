@@ -2,13 +2,14 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { BiSwim } from "react-icons/bi";
-import { FaChartBar, FaPersonSwimming } from "react-icons/fa6";
 import { useState } from "react";
 import { HiMenu, HiX } from "react-icons/hi";
+import { ChartColumnIncreasing, Dumbbell, Timer } from "lucide-react";
 
 const navItems = [
-  { href: "/dashboard", label: "Início", icon: <FaChartBar />, pathMatch: "/dashboard" },
-  { href: "/dashboard/workouts", label: "Treinos", icon: <FaPersonSwimming />, pathMatch: "/workouts" },
+  { href: "/dashboard", label: "Início", icon: <ChartColumnIncreasing size={20} />, pathMatch: "/dashboard" },
+  { href: "/dashboard/workouts", label: "Treinos", icon: <Dumbbell size={20} />, pathMatch: "/workouts" },
+  { href: "/dashboard/timer", label: "Executar Treino", icon: <Timer size={20} />, pathMatch: "/timer" },
 ];
 
 export default function Sidebar() {
@@ -48,7 +49,7 @@ export default function Sidebar() {
                   : "text-[#99B2C6] hover:bg-[#E0E7FF]"
               }`}
             >
-              {item.icon}
+              <div className="text-4xl">{item.icon}</div>
               <p className="font-semibold">{item.label}</p>
             </Link>
           ))}

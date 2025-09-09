@@ -7,6 +7,7 @@ import { Button } from "../lib/Button";
 import { MdDelete } from "react-icons/md";
 import { FaArrowRight } from "react-icons/fa";
 import Link from "next/link";
+import { toast } from "sonner";
 
 export function WorkoutTable() {
   const { workouts, remove } = useWorkouts();
@@ -22,6 +23,16 @@ export function WorkoutTable() {
       </div>
     );
   }
+
+  const handleDelete = (id: number) => {
+    if (confirm("Tem certeza que deseja deletar este treino?")) {
+      remove.mutate(id, {
+        onSuccess: () => {
+          toast.success("Treino deletado com sucesso!");
+        }
+      });
+    }
+  };
 
   return (
     <div className="overflow-x-auto">
@@ -67,7 +78,7 @@ export function WorkoutTable() {
               <td className="px-6 py-4 whitespace-nowrap text-sm text-right">
                 <div className="flex gap-2 justify-end">
                   <Button
-                    onClick={() => remove.mutate(w.id)}
+                    onClick={() => handleDelete(w.id)}
                     variant="red"
                     isIconButton
                     filled={false}
@@ -75,16 +86,16 @@ export function WorkoutTable() {
                     <MdDelete size={18} />
                   </Button>
 
-                  <Button
-                    onClick={() => {}}
-                    variant="red"
-                    isIconButton
-                    filled={false}
-                  >
-                    <Link href={`/dashboard/workouts/${w.id}/`}>
+                  <Link href={`/dashboard/workouts/${w.id}/`}>
+                    <Button
+                      onClick={() => {}}
+                      variant="gray"
+                      isIconButton
+                      filled={false}
+                    >
                       <FaArrowRight size={18} />
-                    </Link>
-                  </Button>
+                    </Button>
+                  </Link>
                 </div>
               </td>
             </tr>

@@ -24,12 +24,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body
-        className={`${roboto.variable} ${robotoMono.variable} antialiased`}
-      >
-        <Providers>{children}</Providers>
-      </body>
+    <html lang="en" suppressHydrationWarning>
+        <body
+          className={`${roboto.variable} ${robotoMono.variable} antialiased`}
+          suppressHydrationWarning
+        >
+          <Providers>{children}</Providers>
+        </body>
     </html>
   );
 }

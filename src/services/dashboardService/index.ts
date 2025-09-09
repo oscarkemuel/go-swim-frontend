@@ -6,10 +6,10 @@ export const dashboardService = {
     api<DashboardCardsData>({
       url: "/dashboard/cards",
       params: { month, year },
-    }),
+    }).then(res => res.data),
   getLastTrainingsChartData: async (month?: number, year?: number) =>
     api<DashboardLast10DayChartData>({
       url: "/dashboard/meters-last-trainings",
       params: { month, year },
-    }),
+    }).then(res => res.data)
 };
