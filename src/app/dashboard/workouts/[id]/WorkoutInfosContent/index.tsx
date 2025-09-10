@@ -4,7 +4,7 @@ import { UseQueryResult } from "@tanstack/react-query";
 import Loading from "./loading";
 
 interface WorkoutInfosContentProps {
-  query: UseQueryResult<GetByIdResponse, unknown>
+  query:  UseQueryResult<GetByIdResponse | null, unknown>
 }
 
 export default function WorkoutInfosContent({ query }: WorkoutInfosContentProps) {

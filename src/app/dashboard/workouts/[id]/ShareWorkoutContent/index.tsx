@@ -9,7 +9,7 @@ import Skeleton from "react-loading-skeleton";
 import Loading from "./loading";
 
 interface ShareWorkoutPageProps {
-  query: UseQueryResult<GetByIdResponse, unknown>
+  query: UseQueryResult<GetByIdResponse | null, unknown>
 }
 
 export default function ShareWorkoutContent({ query }: ShareWorkoutPageProps) {

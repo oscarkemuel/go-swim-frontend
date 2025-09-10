@@ -1,49 +1,75 @@
 "use client";
-import Header from "@/components/layout/Header";
-import { useStopwatch } from "react-timer-hook";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/lib/Button";
-import { is, se } from "date-fns/locale";
 import { useWorkouts } from "@/hooks/useWorkouts";
 import { Workout } from "@/models/Workout";
 import { toast } from "sonner";
 
 interface Sprint {
-  min: number;
-  sec: number;
+  timeInSeconds: number;
   meters: number;
 }
 
 export default function TimerPage() {
   const { create: createWorkoutMutation } = useWorkouts();
-  const { seconds, minutes, isRunning, start, pause, reset } = useStopwatch({
-    autoStart: false,
-  });
 
   const [sprints, setSprints] = useState<Sprint[]>([]);
   const [poolSize, setPoolSize] = useState(25);
 
-  const handleSaveSprint = () => {
-    const newSprint: Sprint = { min: minutes, sec: seconds, meters: poolSize };
-    setSprints((prev) => [...prev, newSprint]);
+  const [startTimestamp, setStartTimestamp] = useState<number | null>(null);
+  const [pausedElapsed, setPausedElapsed] = useState(0);
+  const [elapsed, setElapsed] = useState(0);
+  const [isRunning, setIsRunning] = useState(false);
+
+  // Atualiza o tempo decorrido
+  useEffect(() => {
+    let interval: NodeJS.Timeout | null = null;
+
+    if (isRunning && startTimestamp) {
+      interval = setInterval(() => {
+        setElapsed(pausedElapsed + Math.floor((Date.now() - startTimestamp) / 1000));
+      }, 1000);
+    }
+
+    return () => {
+      if (interval) clearInterval(interval);
+    };
+  }, [isRunning, startTimestamp, pausedElapsed]);
+
+  const handleStart = () => {
+    if (!isRunning) {
+      setStartTimestamp(Date.now());
+      setIsRunning(true);
+    }
+  };
+
+  const handlePause = () => {
+    if (isRunning && startTimestamp) {
+      const totalSoFar = pausedElapsed + Math.floor((Date.now() - startTimestamp) / 1000);
+      setPausedElapsed(totalSoFar);
+      setIsRunning(false);
+      setStartTimestamp(null);
+    }
   };
 
   const handleResetSprints = () => {
-    if (isRunning) {
-      pause();
-    }
-
+    if (isRunning) handlePause();
     if (!confirm("Tem certeza que deseja resetar?")) return;
-    
+
     setSprints([]);
-    reset(undefined, false);
+    setStartTimestamp(null);
+    setPausedElapsed(0);
+    setElapsed(0);
+    setIsRunning(false);
+  };
+
+  const handleSaveSprint = () => {
+    const newSprint: Sprint = { timeInSeconds: elapsed, meters: poolSize };
+    setSprints((prev) => [...prev, newSprint]);
   };
 
   const handleEndTraining = () => {
-    if (isRunning) {
-      pause();
-    }
-
+    if (isRunning) handlePause();
     if (!confirm("Finalizar treino?")) return;
 
     const data: Partial<Workout> = {
@@ -51,14 +77,14 @@ export default function TimerPage() {
       fatigueLevel: 5,
       meters: sprints.reduce((acc, sprint) => acc + sprint.meters, 0),
       style: "livre",
-      timeInSeconds: minutes * 60 + seconds,
+      timeInSeconds: elapsed,
     };
 
     createWorkoutMutation.mutate(data, {
       onSuccess: () => {
         toast.success("Treino salvo com sucesso!");
         setSprints([]);
-        reset(undefined, false);
+        handleResetSprints();
       },
       onError: () => {
         toast.error("Erro ao salvar treino. Tente novamente.");
@@ -71,15 +97,19 @@ export default function TimerPage() {
 
   const isLoading = createWorkoutMutation.isPending;
 
+  const minutes = Math.floor(elapsed / 60);
+  const seconds = elapsed % 60;
+
   return (
     <div className="h-screen">
       <div className="w-full flex flex-col items-center justify-center">
+        {/* Pool size buttons */}
         <div className="flex gap-2 mb-4">
           {poolSizeOptions.map((size) => (
             <Button
               key={size}
               onClick={() => setPoolSize(size)}
-              filled={poolSize === size ? true : false}
+              filled={poolSize === size}
             >
               {size}m
             </Button>
@@ -90,20 +120,20 @@ export default function TimerPage() {
           Distância total: {totalDistance}m
         </div>
 
-        <img src="/timer.png" alt="Timer" className="max-h-40 max-w-40 " />
+        <img src="/timer.png" alt="Timer" className="max-h-40 max-w-40" />
 
         {/* Timer */}
         <div className="text-5xl font-mono my-6">
           {String(minutes).padStart(2, "0")}:{String(seconds).padStart(2, "0")}
         </div>
 
-        {/* Controles */}
+        {/* Controls */}
         <div className="flex gap-3 justify-center mb-6 flex-col w-full max-w-[300px]">
           {isRunning ? (
-            <Button onClick={pause}>Pausar</Button>
+            <Button onClick={handlePause}>Pausar</Button>
           ) : (
-            <Button onClick={start}>
-              {seconds + minutes === 0 ? "Iniciar" : "Continuar"}
+            <Button onClick={handleStart}>
+              {elapsed === 0 ? "Iniciar" : "Continuar"}
             </Button>
           )}
 
@@ -127,21 +157,24 @@ export default function TimerPage() {
             onClick={handleResetSprints}
             filled={false}
             variant="red"
-            disabled={seconds + minutes === 0}
+            disabled={elapsed === 0}
           >
             Zerar
           </Button>
         </div>
 
-        {/* Lista de Sprints */}
+        {/* Sprints list */}
         {sprints.length > 0 && (
           <div className="text-left max-w-[300px] mb-6 w-full">
             <h3 className="font-semibold mb-2">Sprints salvos:</h3>
             <ul className="list-decimal list-inside space-y-1 text-sm grid grid-cols-3 gap-2">
               {sprints.map((s, idx) => (
                 <li key={idx} className="text-gray-700 bg-blue-50 p-1 rounded">
-                  {String(s.min).padStart(2, "0")}:
-                  {String(s.sec).padStart(2, "0")}
+                  {Math.floor(s.timeInSeconds / 60)
+                    .toString()
+                    .padStart(2, "0")}
+                  :
+                  {(s.timeInSeconds % 60).toString().padStart(2, "0")}
                 </li>
               ))}
             </ul>

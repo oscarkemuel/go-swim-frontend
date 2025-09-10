@@ -10,7 +10,10 @@ import Link from "next/link";
 import { toast } from "sonner";
 
 export function WorkoutTable() {
-  const { workouts, remove } = useWorkouts();
+  const { getMyWorkouts, remove } = useWorkouts();
+
+  const workouts = getMyWorkouts();
+
   if (workouts.isLoading || workouts.isFetching)
     return <Skeleton count={10} height={40} />;
 

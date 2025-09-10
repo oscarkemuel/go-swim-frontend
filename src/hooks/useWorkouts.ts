@@ -10,10 +10,12 @@ interface UpdateWorkoutInput {
 export function useWorkouts() {
   const queryClient = useQueryClient();
 
-  const workouts = useQuery({
-    queryKey: ["workouts"],
-    queryFn: () => workoutService.getAll(),
-  })
+  const getMyWorkouts = () => {
+    return useQuery({
+      queryKey: ["my-workouts"],
+      queryFn: () => workoutService.getAll(),
+    });
+  }
 
   const getWorkoutById = (id: number) => {
     return useQuery({
@@ -45,5 +47,5 @@ export function useWorkouts() {
     }
   })
 
-  return { workouts, getWorkoutById, create, update, remove };
+  return { getMyWorkouts, getWorkoutById, create, update, remove };
 }
