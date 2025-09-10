@@ -14,6 +14,7 @@ export function useWorkouts() {
     return useQuery({
       queryKey: ["my-workouts"],
       queryFn: () => workoutService.getAll(),
+      refetchOnWindowFocus: false,
     });
   }
 

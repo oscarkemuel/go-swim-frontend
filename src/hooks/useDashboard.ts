@@ -8,11 +8,13 @@ export function useDashboard() {
   const cards = useQuery({
     queryKey: ["dashboard", "cards", month, year],
     queryFn: () => dashboardService.getDashboardCardsData(month, year),
+    refetchOnWindowFocus: false,
   });
 
   const metersLastTrainings = useQuery({
     queryKey: ["dashboard", "last-trainings", month, year],
     queryFn: () => dashboardService.getLastTrainingsChartData(month, year),
+    refetchOnWindowFocus: false,
   });
 
   return {

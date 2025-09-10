@@ -4,6 +4,7 @@ import { Button } from "@/components/lib/Button";
 import { useWorkouts } from "@/hooks/useWorkouts";
 import { Workout } from "@/models/Workout";
 import { toast } from "sonner";
+import Image from "next/image";
 
 interface Sprint {
   timeInSeconds: number;
@@ -21,7 +22,6 @@ export default function TimerPage() {
   const [elapsed, setElapsed] = useState(0);
   const [isRunning, setIsRunning] = useState(false);
 
-  // Atualiza o tempo decorrido
   useEffect(() => {
     let interval: NodeJS.Timeout | null = null;
 
@@ -120,7 +120,7 @@ export default function TimerPage() {
           Distância total: {totalDistance}m
         </div>
 
-        <img src="/timer.png" alt="Timer" className="max-h-40 max-w-40" />
+        <Image src="/timer.png" alt="Timer" width={200} height={200} />
 
         {/* Timer */}
         <div className="text-5xl font-mono my-6">

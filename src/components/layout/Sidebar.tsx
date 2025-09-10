@@ -7,9 +7,9 @@ import { HiMenu, HiX } from "react-icons/hi";
 import { ChartColumnIncreasing, Dumbbell, Timer } from "lucide-react";
 
 const navItems = [
-  { href: "/dashboard", label: "Início", icon: <ChartColumnIncreasing size={20} />, pathMatch: "/dashboard" },
-  { href: "/dashboard/workouts", label: "Treinos", icon: <Dumbbell size={20} />, pathMatch: "/workouts" },
-  { href: "/dashboard/timer", label: "Executar Treino", icon: <Timer size={20} />, pathMatch: "/timer" },
+  { href: "/", label: "Início", icon: <ChartColumnIncreasing size={20} />, pathMatch: "/" },
+  { href: "/workouts", label: "Treinos", icon: <Dumbbell size={20} />, pathMatch: "/workouts" },
+  { href: "/timer", label: "Executar Treino", icon: <Timer size={20} />, pathMatch: "/timer" },
 ];
 
 export default function Sidebar() {

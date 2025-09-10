@@ -89,7 +89,7 @@ export function WorkoutTable() {
                     <MdDelete size={18} />
                   </Button>
 
-                  <Link href={`/dashboard/workouts/${w.id}/`}>
+                  <Link href={`/workouts/${w.id}/`}>
                     <Button
                       onClick={() => {}}
                       variant="gray"
