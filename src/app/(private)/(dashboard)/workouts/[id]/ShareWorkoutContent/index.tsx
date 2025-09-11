@@ -121,7 +121,6 @@ export default function ShareWorkoutContent({ query }: ShareWorkoutPageProps) {
               className="hidden"
               onChange={handleImageChange}
               ref={inputRef}
-              capture="environment"
             />
           </label>
 
