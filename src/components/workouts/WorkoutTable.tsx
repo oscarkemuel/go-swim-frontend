@@ -8,9 +8,19 @@ import { MdDelete } from "react-icons/md";
 import { FaArrowRight } from "react-icons/fa";
 import Link from "next/link";
 import { toast } from "sonner";
+import DeleteWorkoutModal from "./DeleteWorkoutModa";
+import { useState } from "react";
+import { Workout } from "@/models/Workout";
 
 export function WorkoutTable() {
-  const { getMyWorkouts, remove } = useWorkouts();
+  const { getMyWorkouts } = useWorkouts();
+  const [deleteModal, setDeleteModal] = useState<{
+    isOpen: boolean;
+    workout: Workout | null;
+  }>({
+    isOpen: false,
+    workout: null,
+  });
 
   const workouts = getMyWorkouts();
 
@@ -27,80 +37,143 @@ export function WorkoutTable() {
     );
   }
 
-  const handleDelete = (id: number) => {
-    if (confirm("Tem certeza que deseja deletar este treino?")) {
-      remove.mutate(id, {
-        onSuccess: () => {
-          toast.success("Treino deletado com sucesso!");
-          workouts.refetch();
-        },
-      });
-    }
+  const handleDelete = (workout: Workout) => {
+    setDeleteModal({
+      isOpen: true,
+      workout,
+    });
+  };
+
+  const handleCloseModal = () => {
+    setDeleteModal({
+      isOpen: false,
+      workout: null,
+    });
   };
 
   return (
-    <div className="overflow-x-auto">
-      <table className="min-w-full divide-y divide-gray-200 shadow-md rounded-lg">
-        <thead className="bg-gray-100">
-          <tr>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Distância (m)
-            </th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Data
-            </th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Duração
-            </th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Ritmo (50m)
-            </th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Ritmo (100m)
-            </th>
-            <th className="px-6 py-3"></th>
-          </tr>
-        </thead>
-        <tbody className="bg-white divide-y divide-gray-200">
+    <>
+      <div className="overflow-x-auto">
+        <div className="max-sm:block hidden">
           {data.map((w) => (
-            <tr key={w.id} className="hover:bg-gray-50 transition">
-              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
-                {w.meters}m
-              </td>
-              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
-                {formatDate(w.date)}
-              </td>
-              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
-                {formatTime(w.timeInSeconds)}
-              </td>
-              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
-                {w.rhythmPer50m ? formatTime(w.rhythmPer50m, true) : "N/A"}
-              </td>
-              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
-                {w.rhythmPer100m ? formatTime(w.rhythmPer100m, true) : "N/A"}
-              </td>
-              <td className="px-6 py-4 whitespace-nowrap text-sm text-right">
-                <div className="flex gap-2 justify-end">
+            <div
+              key={w.id}
+              className="bg-white shadow-md rounded-lg p-4 mb-4 hover:bg-gray-50 transition"
+            >
+              <div className="flex justify-between items-center mb-2 gap-4">
+                <div>
+                  <div className="text-lg font-medium text-gray-900">
+                    {w.meters}m
+                    <span className="text-sm text-gray-500">
+                      {" "}
+                      - {formatDate(w.date)}
+                    </span>
+                  </div>
+                  <div className="text-sm text-gray-600">
+                    Duração: {formatTime(w.timeInSeconds)} | Ritmo (50m):{" "}
+                    {w.rhythmPer50m ? formatTime(w.rhythmPer50m, true) : "N/A"}{" "}
+                    | Ritmo (100m):{" "}
+                    {w.rhythmPer100m
+                      ? formatTime(w.rhythmPer100m, true)
+                      : "N/A"}
+                  </div>
+                </div>
+                <div className="flex gap-2">
                   <Button
-                    onClick={() => handleDelete(w.id)}
+                    onClick={() => handleDelete(w)}
                     color="red"
                     variant="icon"
-                    disabled={remove.isPending}
                   >
                     <MdDelete size={18} />
                   </Button>
-
                   <Link href={`/workouts/${w.id}/`}>
                     <Button onClick={() => {}} color="gray" variant="icon">
                       <FaArrowRight size={18} />
                     </Button>
                   </Link>
                 </div>
-              </td>
-            </tr>
+              </div>
+            </div>
           ))}
-        </tbody>
-      </table>
-    </div>
+        </div>
+        <div className="inline-block max-sm:hidden w-full">
+          <table className="min-w-full divide-y divide-gray-200 shadow-md rounded-lg">
+            <thead className="bg-gray-100">
+              <tr>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Distância (m)
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Data
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Duração
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Ritmo (50m)
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Ritmo (100m)
+                </th>
+                <th className="px-6 py-3"></th>
+              </tr>
+            </thead>
+            <tbody className="bg-white divide-y divide-gray-200">
+              {data.map((w) => (
+                <tr key={w.id} className="hover:bg-gray-50 transition">
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+                    {w.meters}m
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+                    {formatDate(w.date)}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+                    {formatTime(w.timeInSeconds)}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+                    {w.rhythmPer50m ? formatTime(w.rhythmPer50m, true) : "N/A"}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+                    {w.rhythmPer100m
+                      ? formatTime(w.rhythmPer100m, true)
+                      : "N/A"}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-right">
+                    <div className="flex gap-2 justify-end">
+                      <Button
+                        onClick={() => handleDelete(w)}
+                        color="red"
+                        variant="icon"
+                      >
+                        <MdDelete size={18} />
+                      </Button>
+
+                      <Link href={`/workouts/${w.id}/`}>
+                        <Button onClick={() => {}} color="gray" variant="icon">
+                          <FaArrowRight size={18} />
+                        </Button>
+                      </Link>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      {deleteModal.workout && (
+        <DeleteWorkoutModal
+          isOpen={deleteModal.isOpen}
+          onClose={handleCloseModal}
+          workout={deleteModal.workout}
+          onSuccess={() => {
+            handleCloseModal();
+            toast.success("Treino deletado com sucesso!");
+            workouts.refetch();
+          }}
+        />
+      )}
+    </>
   );
 }

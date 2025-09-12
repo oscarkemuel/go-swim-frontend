@@ -143,7 +143,7 @@ export default function TimerPage() {
             </Button>
           ) : (
             <Button onClick={handleStart} disabled={isLoading}>
-              {elapsed === 0 ? "Iniciar" : "Continuar"}
+              {elapsed === 0 ? "Iniciar treino" : "Continuar"}
             </Button>
           )}
 
