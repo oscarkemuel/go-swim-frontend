@@ -15,7 +15,14 @@ export async function POST(req: Request) {
 
   const { access_token } = await res.json();
 
-  const response = NextResponse.json({ success: true });
+  const response = NextResponse.json(
+    {
+      status: res.status,
+      data: { success: true },
+    },
+    { status: res.status }
+  );
+
   response.cookies.set("auth_token", access_token, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",

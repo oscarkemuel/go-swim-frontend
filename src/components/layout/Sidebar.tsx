@@ -1,25 +1,53 @@
 "use client";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { redirect, usePathname } from "next/navigation";
 import { BiSwim } from "react-icons/bi";
 import { useState } from "react";
 import { HiMenu, HiX } from "react-icons/hi";
 import { ChartColumnIncreasing, Dumbbell, Timer } from "lucide-react";
+import { Button } from "../lib/Button";
+import { useAuth } from "@/hooks/useAuth";
+import { useRouter } from "next/navigation";
 
 const navItems = [
-  { href: "/", label: "Início", icon: <ChartColumnIncreasing size={20} />, pathMatch: "/" },
-  { href: "/workouts", label: "Treinos", icon: <Dumbbell size={20} />, pathMatch: "/workouts" },
-  { href: "/timer", label: "Executar Treino", icon: <Timer size={20} />, pathMatch: "/timer" },
+  {
+    href: "/",
+    label: "Início",
+    icon: <ChartColumnIncreasing size={20} />,
+  },
+  {
+    href: "/workouts",
+    label: "Treinos",
+    icon: <Dumbbell size={20} />,
+  },
+  {
+    href: "/timer",
+    label: "Executar Treino",
+    icon: <Timer size={20} />,
+  },
 ];
 
 export default function Sidebar() {
   const pathname = usePathname();
+  const { logout } = useAuth();
+  const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
+
+  const handleLogout = async () => {
+    const confirmed = window.confirm("Tem certeza que deseja sair?");
+    if (confirmed) {
+      logout.mutate(undefined, {
+        onSuccess: () => {
+          router.push("/sign-in");
+        },
+      });
+    }
+  };
 
   return (
     <>
       <button
-        className="md:hidden fixed top-4 left-4 z-50 p-2 bg-white rounded-md shadow"
+        className="md:hidden fixed top-2 left-2 z-50 p-2 bg-white rounded-md shadow"
         onClick={() => setIsOpen(!isOpen)}
       >
         {isOpen ? <HiX className="w-6 h-6" /> : <HiMenu className="w-6 h-6" />}
@@ -38,21 +66,31 @@ export default function Sidebar() {
           <BiSwim className="text-2xl" />
           <h2 className="text-lg font-bold">GoSwim</h2>
         </div>
-        <nav className="flex flex-col gap-2 w-full px-2">
-          {navItems.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={`flex items-center gap-3 py-3 px-5 rounded-lg transition-colors ${
-                pathname === item.href
-                  ? "bg-[#3A36DB] text-white"
-                  : "text-[#99B2C6] hover:bg-[#E0E7FF]"
-              }`}
-            >
-              <div className="text-4xl">{item.icon}</div>
-              <p className="font-semibold">{item.label}</p>
-            </Link>
-          ))}
+        <nav className="px-2 flex flex-col justify-between h-full">
+          <div className="flex flex-col gap-2 w-full">
+            {navItems.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={`flex items-center gap-3 py-3 px-5 rounded-lg transition-colors ${
+                  pathname === item.href
+                    ? "bg-[#3A36DB] text-white"
+                    : "text-[#99B2C6] hover:bg-[#E0E7FF]"
+                }`}
+              >
+                <div className="text-4xl">{item.icon}</div>
+                <p className="font-semibold">{item.label}</p>
+              </Link>
+            ))}
+          </div>
+          <Button
+            variant="outlined"
+            className="w-full"
+            onClick={handleLogout}
+            isLoading={logout.isPending}
+          >
+            Sair
+          </Button>
         </nav>
       </aside>
 

@@ -1,34 +1,42 @@
-'use client';
+"use client";
 
-import { redirect } from "next/navigation";
+import { Button } from "@/components/lib/Button";
+import { useAuth } from "@/hooks/useAuth";
+import { useRouter } from "next/navigation";
+import { BiSwim } from "react-icons/bi";
 
 export default function LoginPage() {
+  const { login } = useAuth();
+  const router = useRouter();
+
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
     const formData = new FormData(event.target as HTMLFormElement);
     const email = formData.get("email");
     const password = formData.get("password");
 
-    fetch("/api/auth/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ email, password }),
-    }).then((response) => {
-      if (response.ok) {
-        redirect("/");
+    login.mutate(
+      { email: String(email), password: String(password) },
+      {
+        onSuccess: (request) => {
+          if (request.status === 201) {
+            router.push("/");
+          }
+        },
       }
-    });
+    );
   };
 
   return (
     <div className="flex items-center justify-center h-full">
       <div className="w-full max-w-sm p-4 bg-white border border-gray-200 rounded-lg shadow-sm sm:p-6 md:p-8 dark:bg-gray-800 dark:border-gray-700">
         <form className="space-y-6" onSubmit={handleSubmit}>
-          <h5 className="text-xl font-medium text-gray-900 dark:text-white">
-            Fazer login
-          </h5>
+          <div className="flex items-center gap-4">
+            <BiSwim className="text-3xl text-white" />
+            <h5 className="text-xl font-medium text-gray-900 dark:text-white">
+              Fazer login
+            </h5>
+          </div>
           <div>
             <label
               htmlFor="email"
@@ -86,13 +94,10 @@ export default function LoginPage() {
               Lost Password?
             </a>
           </div> */}
-          <button
-            type="submit"
-            className="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-          >
+          <Button type="submit" isLoading={login.isPending}>
             Fazer login
-          </button>
-          <div className="text-sm font-medium text-gray-500 dark:text-gray-300">
+          </Button>
+          {/* <div className="text-sm font-medium text-gray-500 dark:text-gray-300">
             Não cadastrado?{" "}
             <a
               href="#"
@@ -100,7 +105,7 @@ export default function LoginPage() {
             >
               Criar conta
             </a>
-          </div>
+          </div> */}
         </form>
       </div>
     </div>

@@ -27,7 +27,9 @@ export default function TimerPage() {
 
     if (isRunning && startTimestamp) {
       interval = setInterval(() => {
-        setElapsed(pausedElapsed + Math.floor((Date.now() - startTimestamp) / 1000));
+        setElapsed(
+          pausedElapsed + Math.floor((Date.now() - startTimestamp) / 1000)
+        );
       }, 1000);
     }
 
@@ -45,17 +47,15 @@ export default function TimerPage() {
 
   const handlePause = () => {
     if (isRunning && startTimestamp) {
-      const totalSoFar = pausedElapsed + Math.floor((Date.now() - startTimestamp) / 1000);
+      const totalSoFar =
+        pausedElapsed + Math.floor((Date.now() - startTimestamp) / 1000);
       setPausedElapsed(totalSoFar);
       setIsRunning(false);
       setStartTimestamp(null);
     }
   };
 
-  const handleResetSprints = () => {
-    if (isRunning) handlePause();
-    if (!confirm("Tem certeza que deseja resetar?")) return;
-
+  const resetSprints = () => {
     setSprints([]);
     setStartTimestamp(null);
     setPausedElapsed(0);
@@ -63,9 +63,18 @@ export default function TimerPage() {
     setIsRunning(false);
   };
 
+  const handleResetSprints = () => {
+    if (isRunning) handlePause();
+    if (!confirm("Tem certeza que deseja resetar?")) return;
+
+    resetSprints();
+    toast.success("Resetado com sucesso!");
+  };
+
   const handleSaveSprint = () => {
     const newSprint: Sprint = { timeInSeconds: elapsed, meters: poolSize };
     setSprints((prev) => [...prev, newSprint]);
+    toast.success(`Sprint de ${poolSize}m salvo!`);
   };
 
   const handleEndTraining = () => {
@@ -83,8 +92,7 @@ export default function TimerPage() {
     createWorkoutMutation.mutate(data, {
       onSuccess: () => {
         toast.success("Treino salvo com sucesso!");
-        setSprints([]);
-        handleResetSprints();
+        resetSprints();
       },
       onError: () => {
         toast.error("Erro ao salvar treino. Tente novamente.");
@@ -109,7 +117,7 @@ export default function TimerPage() {
             <Button
               key={size}
               onClick={() => setPoolSize(size)}
-              filled={poolSize === size}
+              variant={poolSize === size ? "filled" : "outlined"}
             >
               {size}m
             </Button>
@@ -130,34 +138,37 @@ export default function TimerPage() {
         {/* Controls */}
         <div className="flex gap-3 justify-center mb-6 flex-col w-full max-w-[300px]">
           {isRunning ? (
-            <Button onClick={handlePause}>Pausar</Button>
+            <Button onClick={handlePause} disabled={isLoading}>
+              Pausar
+            </Button>
           ) : (
-            <Button onClick={handleStart}>
+            <Button onClick={handleStart} disabled={isLoading}>
               {elapsed === 0 ? "Iniciar" : "Continuar"}
             </Button>
           )}
 
           <Button
             onClick={handleSaveSprint}
-            disabled={!isRunning}
-            variant="gray"
+            disabled={!isRunning || isLoading}
+            color="gray"
           >
             Completar Sprint
           </Button>
 
           <Button
             onClick={handleEndTraining}
-            variant="green"
+            color="green"
             disabled={sprints.length === 0 || isLoading}
+            isLoading={isLoading}
           >
             Finalizar treino
           </Button>
 
           <Button
             onClick={handleResetSprints}
-            filled={false}
-            variant="red"
-            disabled={elapsed === 0}
+            variant="outlined"
+            color="red"
+            disabled={elapsed === 0 || isLoading}
           >
             Zerar
           </Button>
@@ -173,8 +184,7 @@ export default function TimerPage() {
                   {Math.floor(s.timeInSeconds / 60)
                     .toString()
                     .padStart(2, "0")}
-                  :
-                  {(s.timeInSeconds % 60).toString().padStart(2, "0")}
+                  :{(s.timeInSeconds % 60).toString().padStart(2, "0")}
                 </li>
               ))}
             </ul>

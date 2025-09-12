@@ -1,85 +1,136 @@
 import React from "react";
 import clsx from "clsx";
 
-type Variant = "blue" | "green" | "red" | "yellow" | "gray";
+type Color = "blue" | "green" | "red" | "yellow" | "gray";
+type Variant = "normal" | "filled" | "outlined" | "icon";
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  children: React.ReactNode;
-  onClick: () => void;
+  children?: React.ReactNode;
+  onClick?: () => void;
+  color?: Color;
   variant?: Variant;
-  filled?: boolean;
-  isIconButton?: boolean;
+  isLoading?: boolean;
 }
 
 export const Button = ({
   children,
   onClick,
-  variant = "blue",
-  isIconButton = false,
-  filled = true,
+  color = "blue",
+  variant = "filled",
+  isLoading = false,
+  disabled,
+  className,
   ...props
 }: ButtonProps) => {
-  const baseClasses = `font-medium rounded-lg text-sm ${
-    isIconButton ? "p-2" : "px-5 py-2.5 w-full"
-  } focus:outline-none cursor-pointer`;
+  const baseClasses =
+    "font-medium rounded-lg text-sm focus:outline-none flex items-center justify-center transition-colors cursor-pointer";
 
-  const getBackgroundClass = (variant: Variant) => {
-    if (props.disabled) {
+  const sizeClasses = variant === "icon" ? "p-2" : "px-5 py-2.5 w-full";
+
+  const getColorClasses = (color: Color, variant: Variant) => {
+    if (disabled || isLoading) {
       return "bg-gray-300 text-gray-500 cursor-not-allowed";
     }
 
-    if (filled) {
-      switch (variant) {
+    if (variant === "filled") {
+      switch (color) {
         case "blue":
-          return "text-white bg-blue-700 hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700";
+          return "bg-blue-600 hover:bg-blue-700 text-white";
         case "green":
-          return "text-white bg-green-700 hover:bg-green-800 dark:bg-green-600 dark:hover:bg-green-700";
+          return "bg-green-600 hover:bg-green-700 text-white";
         case "red":
-          return "text-white bg-red-700 hover:bg-red-800 dark:bg-red-600 dark:hover:bg-red-700";
+          return "bg-red-600 hover:bg-red-700 text-white";
         case "yellow":
-          return "text-black bg-yellow-400 hover:bg-yellow-500 dark:bg-yellow-500 dark:hover:bg-yellow-600";
+          return "bg-yellow-400 hover:bg-yellow-500 text-black";
         case "gray":
-          return "text-white bg-gray-700 hover:bg-gray-800 dark:bg-gray-600 dark:hover:bg-gray-700";
-        default:
-          return "";
+          return "bg-gray-600 hover:bg-gray-700 text-white";
       }
     }
 
-    if (!filled) {
-      switch (variant) {
+    if (variant === "outlined") {
+      switch (color) {
         case "blue":
-          return "bg-transparent border border-blue-700 text-blue-700 hover:text-white hover:bg-blue-600 hover:border-transparent";
+          return "border border-blue-600 text-blue-600 hover:bg-blue-50";
         case "green":
-          return "bg-transparent border border-green-700 text-green-700 hover:text-white hover:bg-green-600 hover:border-transparent";
+          return "border border-green-600 text-green-600 hover:bg-green-50";
         case "red":
-          return "bg-transparent border border-red-700 text-red-700 hover:text-white hover:bg-red-600 hover:border-transparent";
+          return "border border-red-600 text-red-600 hover:bg-red-50";
         case "yellow":
-          return "bg-transparent border border-yellow-400 text-yellow-400 hover:text-black hover:bg-yellow-500 hover:border-transparent";
+          return "border border-yellow-400 text-yellow-500 hover:bg-yellow-50";
         case "gray":
-          return "bg-transparent border border-gray-700 text-gray-700 hover:text-white hover:bg-gray-600 hover:border-transparent";
-        default:
-          return "";
+          return "border border-gray-600 text-gray-600 hover:bg-gray-50";
+      }
+    }
+
+    if (variant === "normal") {
+      switch (color) {
+        case "blue":
+          return "text-blue-600 hover:underline";
+        case "green":
+          return "text-green-600 hover:underline";
+        case "red":
+          return "text-red-600 hover:underline";
+        case "yellow":
+          return "text-yellow-500 hover:underline";
+        case "gray":
+          return "text-gray-600 hover:underline";
+      }
+    }
+
+    if (variant === "icon") {
+      switch (color) {
+        case "blue":
+          return "text-blue-600 hover:bg-blue-100";
+        case "green":
+          return "text-green-600 hover:bg-green-100";
+        case "red":
+          return "text-red-600 hover:bg-red-100";
+        case "yellow":
+          return "text-yellow-500 hover:bg-yellow-100";
+        case "gray":
+          return "text-gray-600 hover:bg-gray-100";
       }
     }
 
     return "";
   };
 
-  const variants: Record<Variant, string> = {
-    blue: getBackgroundClass("blue"),
-    green: getBackgroundClass("green"),
-    red: getBackgroundClass("red"),
-    yellow: getBackgroundClass("yellow"),
-    gray: getBackgroundClass("gray"),
-  };
-
   return (
     <button
       onClick={onClick}
-      className={clsx(baseClasses, variants[variant])}
+      disabled={disabled || isLoading}
+      className={clsx(
+        baseClasses,
+        sizeClasses,
+        getColorClasses(color, variant),
+        className
+      )}
       {...props}
     >
-      {children}
+      {isLoading ? (
+        <svg
+          className="animate-spin h-5 w-5 text-current"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+        >
+          <circle
+            className="opacity-25"
+            cx="12"
+            cy="12"
+            r="10"
+            stroke="currentColor"
+            strokeWidth="4"
+          />
+          <path
+            className="opacity-75"
+            fill="currentColor"
+            d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+          />
+        </svg>
+      ) : (
+        children
+      )}
     </button>
   );
 };

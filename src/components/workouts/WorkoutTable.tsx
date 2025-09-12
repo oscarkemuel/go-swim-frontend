@@ -32,7 +32,8 @@ export function WorkoutTable() {
       remove.mutate(id, {
         onSuccess: () => {
           toast.success("Treino deletado com sucesso!");
-        }
+          workouts.refetch();
+        },
       });
     }
   };
@@ -82,20 +83,15 @@ export function WorkoutTable() {
                 <div className="flex gap-2 justify-end">
                   <Button
                     onClick={() => handleDelete(w.id)}
-                    variant="red"
-                    isIconButton
-                    filled={false}
+                    color="red"
+                    variant="icon"
+                    disabled={remove.isPending}
                   >
                     <MdDelete size={18} />
                   </Button>
 
                   <Link href={`/workouts/${w.id}/`}>
-                    <Button
-                      onClick={() => {}}
-                      variant="gray"
-                      isIconButton
-                      filled={false}
-                    >
+                    <Button onClick={() => {}} color="gray" variant="icon">
                       <FaArrowRight size={18} />
                     </Button>
                   </Link>

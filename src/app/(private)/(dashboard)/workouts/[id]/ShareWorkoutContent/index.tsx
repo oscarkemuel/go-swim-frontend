@@ -9,7 +9,7 @@ import Skeleton from "react-loading-skeleton";
 import Loading from "./loading";
 
 interface ShareWorkoutPageProps {
-  query: UseQueryResult<GetByIdResponse | null, unknown>
+  query: UseQueryResult<GetByIdResponse | null, unknown>;
 }
 
 export default function ShareWorkoutContent({ query }: ShareWorkoutPageProps) {
@@ -30,7 +30,11 @@ export default function ShareWorkoutContent({ query }: ShareWorkoutPageProps) {
   }
 
   if (isError || !data) {
-    return <div className="text-center py-6 text-red-500">Erro ao carregar informações do treino.</div>;
+    return (
+      <div className="text-center py-6 text-red-500">
+        Erro ao carregar informações do treino.
+      </div>
+    );
   }
 
   const workout = data.workout;
@@ -94,7 +98,7 @@ export default function ShareWorkoutContent({ query }: ShareWorkoutPageProps) {
           <li className="me-2">
             <Button
               onClick={() => handleRhythmChange("50m")}
-              filled={selectedRhythm === "50m"}
+              variant={selectedRhythm === "50m" ? "filled" : "outlined"}
             >
               Rítmo/50m
             </Button>
@@ -102,7 +106,7 @@ export default function ShareWorkoutContent({ query }: ShareWorkoutPageProps) {
           <li className="me-2">
             <Button
               onClick={() => handleRhythmChange("100m")}
-              filled={selectedRhythm === "100m"}
+              variant={selectedRhythm === "100m" ? "filled" : "outlined"}
             >
               Rítmo/100m
             </Button>
@@ -125,7 +129,11 @@ export default function ShareWorkoutContent({ query }: ShareWorkoutPageProps) {
           </label>
 
           <div className="mt-4 w-full">
-            <Button onClick={handleDownload} disabled={!generatedImage} filled={false}>
+            <Button
+              onClick={handleDownload}
+              disabled={!generatedImage}
+              variant="outlined"
+            >
               <div className="flex items-center justify-center gap-2">
                 <FaDownload />
                 Baixar imagem
@@ -135,7 +143,9 @@ export default function ShareWorkoutContent({ query }: ShareWorkoutPageProps) {
         </div>
       </div>
 
-      {!generatedImage  && isGenerating && <Skeleton width="100%" height={330} />}
+      {!generatedImage && isGenerating && (
+        <Skeleton width="100%" height={330} />
+      )}
       {!generatedImage && !isGenerating && (
         <div className="w-full h-[330px] rounded-lg border-2 border-dashed border-gray-300 flex items-center justify-center">
           <span className="text-gray-500">Nenhuma imagem selecionada</span>
