@@ -1,5 +1,5 @@
 import Header from "@/components/layout/Header";
-import { WorkoutTable } from "@/components/workouts/WorkoutTable";
+import { WorkoutTable } from "./WorkoutTable";
 
 export default function WorkoutsPage() {
   return (

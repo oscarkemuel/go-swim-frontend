@@ -1,7 +1,7 @@
+import { Button } from "@/components/lib/Button";
+import { Modal } from "@/components/lib/Modal";
+import { ModalProps } from "@/components/lib/Modal/types";
 import { useWorkouts } from "@/hooks/useWorkouts";
-import { Button } from "../lib/Button";
-import { Modal } from "../lib/Modal";
-import { ModalProps } from "../lib/Modal/types";
 import { Workout } from "@/models/Workout";
 import { formatDate } from "@/utils";
 

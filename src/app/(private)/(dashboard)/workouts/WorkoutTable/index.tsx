@@ -3,14 +3,14 @@
 import { useWorkouts } from "@/hooks/useWorkouts";
 import { formatDate, formatTime, formatTimeToMinutes } from "@/utils";
 import Skeleton from "react-loading-skeleton";
-import { Button } from "../lib/Button";
 import { MdDelete } from "react-icons/md";
 import { FaArrowRight } from "react-icons/fa";
 import Link from "next/link";
 import { toast } from "sonner";
-import DeleteWorkoutModal from "./DeleteWorkoutModal";
 import { useState } from "react";
 import { Workout } from "@/models/Workout";
+import { Button } from "@/components/lib/Button";
+import DeleteWorkoutModal from "../DeleteWorkoutModal";
 
 export function WorkoutTable() {
   const { getMyWorkouts } = useWorkouts();
