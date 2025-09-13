@@ -5,9 +5,10 @@ import { BiSwim } from "react-icons/bi";
 import { useState } from "react";
 import { HiMenu, HiX } from "react-icons/hi";
 import { ChartColumnIncreasing, Dumbbell, Timer } from "lucide-react";
-import { Button } from "../lib/Button";
 import { useAuth } from "@/hooks/useAuth";
 import { useRouter } from "next/navigation";
+import { Button } from "@/components/lib/Button";
+import LogoutModal from "./LogoutModal";
 
 const navItems = [
   {
@@ -29,20 +30,21 @@ const navItems = [
 
 export default function Sidebar() {
   const pathname = usePathname();
-  const { logout } = useAuth();
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
+  const [logoutModalOpen, setLogoutModalOpen] = useState(false);
 
   const handleLogout = async () => {
-    const confirmed = window.confirm("Tem certeza que deseja sair?");
-    if (confirmed) {
-      logout.mutate(undefined, {
-        onSuccess: () => {
-          router.push("/sign-in");
-        },
-      });
-    }
+    setLogoutModalOpen(true);
   };
+
+  const handleCloseModal = () => {
+    setLogoutModalOpen(false);
+  }
+
+  const onConfirmLogout = async () => {
+    router.push("/sign-in");
+  }
 
   return (
     <>
@@ -87,7 +89,6 @@ export default function Sidebar() {
             variant="outlined"
             className="w-full"
             onClick={handleLogout}
-            isLoading={logout.isPending}
           >
             Sair
           </Button>
@@ -98,6 +99,14 @@ export default function Sidebar() {
         <div
           className="fixed inset-0 bg-black opacity-30 md:hidden z-40"
           onClick={() => setIsOpen(false)}
+        />
+      )}
+
+      {logoutModalOpen && (
+        <LogoutModal
+          isOpen={logoutModalOpen}
+          onClose={handleCloseModal}
+          onSuccess={onConfirmLogout}
         />
       )}
     </>

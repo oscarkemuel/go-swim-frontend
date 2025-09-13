@@ -8,7 +8,7 @@ import { MdDelete } from "react-icons/md";
 import { FaArrowRight } from "react-icons/fa";
 import Link from "next/link";
 import { toast } from "sonner";
-import DeleteWorkoutModal from "./DeleteWorkoutModa";
+import DeleteWorkoutModal from "./DeleteWorkoutModal";
 import { useState } from "react";
 import { Workout } from "@/models/Workout";
 

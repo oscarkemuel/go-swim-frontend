@@ -4,6 +4,7 @@ import { use } from "react";
 import ShareWorkoutContent from "./ShareWorkoutContent";
 import { useWorkouts } from "@/hooks/useWorkouts";
 import WorkoutInfosContent from "./WorkoutInfosContent";
+import { useRouter } from "next/navigation";
 
 export default function ShareWorkoutPage({
   params,
@@ -11,6 +12,7 @@ export default function ShareWorkoutPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = use(params);
+  const router = useRouter();
   const { getWorkoutById } = useWorkouts();
 
   const query = getWorkoutById(Number(id));
@@ -21,6 +23,10 @@ export default function ShareWorkoutPage({
         <Header
           title={`Visualizar treino`}
           subtitle="Veja os detalhes do seu treino"
+          backButton={{
+            onClick: () => router.push("/workouts"),
+            ariaLabel: "Voltar para a lista de treinos",
+          }}
         />
         <WorkoutInfosContent query={query} />
       </div>
