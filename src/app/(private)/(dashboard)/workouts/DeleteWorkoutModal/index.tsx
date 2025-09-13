@@ -31,7 +31,7 @@ export default function DeleteWorkoutModal(props: DeleteWorkoutModalProps) {
     >
       <p className="my-8">
         Tem certeza que deseja deletar o treino do dia{" "}
-        {formatDate(props.workout.date)}?
+        <b>{formatDate(props.workout.date)}</b>?
       </p>
 
       <div className="flex justify-end mt-4 gap-4">
