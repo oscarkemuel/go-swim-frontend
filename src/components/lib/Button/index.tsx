@@ -1,7 +1,7 @@
 import React from "react";
 import clsx from "clsx";
 
-type Color = "blue" | "green" | "red" | "yellow" | "gray";
+type Color = "blue" | "green" | "red" | "yellow" | "gray" | "white";
 type Variant = "normal" | "filled" | "outlined" | "icon";
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
@@ -44,6 +44,8 @@ export const Button = ({
           return "bg-yellow-400 hover:bg-yellow-500 text-black";
         case "gray":
           return "bg-gray-600 hover:bg-gray-700 text-white";
+        case "white":
+          return "bg-white hover:bg-gray-100 text-gray-800";
       }
     }
 
@@ -59,6 +61,8 @@ export const Button = ({
           return "border border-yellow-400 text-yellow-500 hover:bg-yellow-50";
         case "gray":
           return "border border-gray-600 text-gray-600 hover:bg-gray-50";
+        case "white":
+          return "border border-white text-white hover:bg-white hover:text-gray-800";
       }
     }
 
@@ -74,6 +78,8 @@ export const Button = ({
           return "text-yellow-500 hover:underline";
         case "gray":
           return "text-gray-600 hover:underline";
+        case "white":
+          return "text-white hover:underline";
       }
     }
 
@@ -89,6 +95,8 @@ export const Button = ({
           return "text-yellow-500 hover:bg-yellow-100";
         case "gray":
           return "text-gray-600 hover:bg-gray-100";
+        case "white":
+          return "text-white hover:bg-white hover:text-gray-800";
       }
     }
 

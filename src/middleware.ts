@@ -11,12 +11,12 @@ const publicRoutes = [
     whenAuthenticated: "redirect",
   },
   {
-    path: "/about",
+    path: "/home",
     whenAuthenticated: "next",
   },
 ] as const;
 
-const REDIRECT_WHEN_NOT_AUTHENTICATED_ROUTE = "/sign-in";
+const REDIRECT_WHEN_NOT_AUTHENTICATED_ROUTE = "/home";
 
 export function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname;

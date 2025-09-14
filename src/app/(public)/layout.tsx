@@ -4,8 +4,8 @@ export default function PublicLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <div className="h-screen text-gray-800 bg-[#F3F6FD] p-6">
-      <main className="h-full">
+    <div className="h-screen text-gray-800 bg-[#F3F6FD]">
+      <main className="h-">
         {children}
       </main>
     </div>

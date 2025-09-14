@@ -43,7 +43,7 @@ export default function Sidebar() {
   }
 
   const onConfirmLogout = async () => {
-    router.push("/sign-in");
+    router.push("/home");
   }
 
   return (
