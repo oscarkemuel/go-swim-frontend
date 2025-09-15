@@ -51,7 +51,7 @@ export default function LandingPage() {
         <div className="relative flex justify-center text-center px-6 py-24 gap-8 bg-gradient-to-b from-[#6e6ae9] to-[#4a469e] text-white rounded-b-3xl flex-wrap">
           <div className="flex flex-col justify-center gap-8">
             <h1 className="text-4xl md:text-6xl font-bold leading-tight max-w-2xl text-start">
-              Um aplicativo para você te auxiliar nos seus treinos de natação
+              Um aplicativo para te auxiliar nos seus treinos de natação
             </h1>
             <p className="max-w-xl text-sm opacity-90 text-start">
               Sabe aquele aplicativo que te ajuda a organizar seus treinos,
