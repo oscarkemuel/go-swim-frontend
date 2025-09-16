@@ -1,10 +1,11 @@
 "use client";
 import Link from "next/link";
-import { redirect, usePathname } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { BiSwim } from "react-icons/bi";
 import { useState } from "react";
 import { HiMenu, HiX } from "react-icons/hi";
-import { ChartColumnIncreasing, Dumbbell, Timer, Trophy } from "lucide-react";
+import { ChartColumnIncreasing, Dumbbell, Timer, Trophy} from "lucide-react";
+import { DynamicIcon } from "lucide-react/dynamic";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/lib/Button";
 import LogoutModal from "./LogoutModal";
@@ -28,7 +29,8 @@ const navItems = [
   {
     href: "/achievements",
     label: "Conquistas",
-    icon: <Trophy size={20} />,
+    // icon: <Trophy size={20} />,
+    icon: <DynamicIcon name="trophy" size={20} />,
   }
 ];
 
