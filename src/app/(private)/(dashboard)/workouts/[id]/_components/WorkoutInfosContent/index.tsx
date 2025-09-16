@@ -1,5 +1,5 @@
 import { GetByIdResponse } from "@/services/workoutService/types";
-import { formatDate, formatTime, formatTimeToMinutes } from "@/utils";
+import { formatDate, formatTime } from "@/utils";
 import { UseQueryResult } from "@tanstack/react-query";
 import Loading from "./loading";
 

@@ -1,7 +1,7 @@
 import Header from "@/components/layout/Header";
-import Filters from "./Filters";
-import DashboardCards from "./Cards";
-import MetersLastDaysChart from "./Charts/MetersLastDaysChart";
+import DashboardCards from "./_components/Cards";
+import MetersLastDaysChart from "./_components/Charts/MetersLastDaysChart";
+import Filters from "./_components/Filters";
 
 export default function DashboardPage() {
   return (

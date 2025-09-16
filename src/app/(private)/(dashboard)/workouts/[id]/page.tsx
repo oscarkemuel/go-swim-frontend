@@ -1,9 +1,9 @@
 "use client";
 import Header from "@/components/layout/Header";
 import { use } from "react";
-import ShareWorkoutContent from "./ShareWorkoutContent";
+import ShareWorkoutContent from "./_components/ShareWorkoutContent";
 import { useWorkouts } from "@/hooks/useWorkouts";
-import WorkoutInfosContent from "./WorkoutInfosContent";
+import WorkoutInfosContent from "./_components/WorkoutInfosContent";
 import { useRouter } from "next/navigation";
 
 export default function ShareWorkoutPage({

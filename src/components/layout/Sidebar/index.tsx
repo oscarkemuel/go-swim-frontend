@@ -4,8 +4,7 @@ import { redirect, usePathname } from "next/navigation";
 import { BiSwim } from "react-icons/bi";
 import { useState } from "react";
 import { HiMenu, HiX } from "react-icons/hi";
-import { ChartColumnIncreasing, Dumbbell, Timer } from "lucide-react";
-import { useAuth } from "@/hooks/useAuth";
+import { ChartColumnIncreasing, Dumbbell, Timer, Trophy } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/lib/Button";
 import LogoutModal from "./LogoutModal";
@@ -26,6 +25,11 @@ const navItems = [
     label: "Executar Treino",
     icon: <Timer size={20} />,
   },
+  {
+    href: "/achievements",
+    label: "Conquistas",
+    icon: <Trophy size={20} />,
+  }
 ];
 
 export default function Sidebar() {

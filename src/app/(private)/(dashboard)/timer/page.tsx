@@ -4,9 +4,9 @@ import { Button } from "@/components/lib/Button";
 import { Workout } from "@/models/Workout";
 import { toast } from "sonner";
 import Image from "next/image";
-import ResetConfirmModal from "./ResetConfirmModal";
-import FinishConfirmModal from "./FinishConfirmModal";
 import TimerImage from "@/../public/images/timer.png";
+import ResetConfirmModal from "./_components/ResetConfirmModal";
+import FinishConfirmModal from "./_components/FinishConfirmModal";
 
 interface Sprint {
   timeInSeconds: number;
