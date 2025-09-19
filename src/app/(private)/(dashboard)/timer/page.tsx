@@ -7,6 +7,10 @@ import Image from "next/image";
 import TimerImage from "@/../public/images/timer.png";
 import ResetConfirmModal from "./_components/ResetConfirmModal";
 import FinishConfirmModal from "./_components/FinishConfirmModal";
+import {
+  LOCAL_STORAGE_CURRENT_SPRINTS_KEY,
+  LOCAL_STORAGE_CURRENT_TIMER_KEY,
+} from "@/constants";
 
 interface Sprint {
   timeInSeconds: number;
@@ -29,8 +33,12 @@ export default function TimerPage() {
 
     if (isRunning && startTimestamp) {
       interval = setInterval(() => {
-        setElapsed(
-          pausedElapsed + Math.floor((Date.now() - startTimestamp) / 1000)
+        const newElapsed =
+          pausedElapsed + Math.floor((Date.now() - startTimestamp) / 1000);
+        setElapsed(newElapsed);
+        localStorage.setItem(
+          LOCAL_STORAGE_CURRENT_TIMER_KEY,
+          newElapsed.toString()
         );
       }, 1000);
     }
@@ -39,6 +47,28 @@ export default function TimerPage() {
       if (interval) clearInterval(interval);
     };
   }, [isRunning, startTimestamp, pausedElapsed]);
+
+  useEffect(() => {
+    const savedTimer = localStorage.getItem(LOCAL_STORAGE_CURRENT_TIMER_KEY);
+    const savedSprints = localStorage.getItem(
+      LOCAL_STORAGE_CURRENT_SPRINTS_KEY
+    );
+
+    if (savedTimer) {
+      const savedElapsed = parseInt(savedTimer);
+      setPausedElapsed(savedElapsed);
+      setElapsed(savedElapsed);
+      setStartTimestamp(Date.now());
+    }
+
+    if (savedSprints) {
+      try {
+        setSprints(JSON.parse(savedSprints));
+      } catch {
+        localStorage.removeItem(LOCAL_STORAGE_CURRENT_SPRINTS_KEY); // se quebrar o JSON, limpa
+      }
+    }
+  }, []);
 
   const handleStart = () => {
     if (!isRunning) {
@@ -63,11 +93,17 @@ export default function TimerPage() {
     setPausedElapsed(0);
     setElapsed(0);
     setIsRunning(false);
+    localStorage.removeItem(LOCAL_STORAGE_CURRENT_TIMER_KEY);
+    localStorage.removeItem(LOCAL_STORAGE_CURRENT_SPRINTS_KEY);
   };
 
   const handleSaveSprint = () => {
     const newSprint: Sprint = { timeInSeconds: elapsed, meters: poolSize };
     setSprints((prev) => [...prev, newSprint]);
+    localStorage.setItem(
+      LOCAL_STORAGE_CURRENT_SPRINTS_KEY,
+      JSON.stringify([...sprints, newSprint])
+    );
     toast.success(`Sprint de ${poolSize}m salvo!`);
   };
 
@@ -101,7 +137,7 @@ export default function TimerPage() {
     setFinishConfirmModalOpen(true);
   };
 
-  const poolSizeOptions = [25, 50, 75, 100];
+  const poolSizeOptions = [25, 50, 75, 100, 125, 150, 200, 250, 300];
   const totalDistance = sprints.reduce((acc, sprint) => acc + sprint.meters, 0);
 
   const minutes = Math.floor(elapsed / 60);
@@ -109,10 +145,10 @@ export default function TimerPage() {
 
   return (
     <>
-      <div className="h-screen">
+      <div className="h-screen pt-10">
         <div className="w-full flex flex-col items-center justify-center">
           {/* Pool size buttons */}
-          <div className="flex gap-2 mb-4">
+          <div className="flex gap-2 mb-4 max-w-[315px] overflow-x-auto pb-3">
             {poolSizeOptions.map((size) => (
               <Button
                 key={size}

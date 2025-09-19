@@ -37,11 +37,22 @@ export default function LoginPage() {
 
         <div className="w-full max-w-sm p-4 bg-white border border-gray-200 rounded-lg shadow-sm sm:p-6 md:p-8 bg-gradient-to-b from-[#6e6ae9] to-[#4a469e]">
           <form className="space-y-6" onSubmit={handleSubmit}>
-            <div className="flex items-center gap-4">
-              <BiSwim className="text-3xl text-white" />
-              <h5 className="text-xl font-medium text-gray-900 dark:text-white">
-                Fazer login
-              </h5>
+            <div className="flex items-center gap-4 flex-col">
+              <div className="flex items-center justify-items-start gap-4">
+                <BiSwim className="text-3xl text-white" />
+                <h5 className="text-xl font-medium text-gray-900 dark:text-white">
+                  Fazer login
+                </h5>
+              </div>
+
+              <div>
+                {login.isError && (
+                  <p className="text-white text-sm underline">
+                    Ops! Algo deu errado. Tente novamente. Caso não funcione,
+                    entre em contato com o suporte.
+                  </p>
+                )}
+              </div>
             </div>
             <div>
               <label

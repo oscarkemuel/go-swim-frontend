@@ -63,7 +63,7 @@ export default function LandingPage() {
               </Link>
               <Link href="#cta" className="w-full">
                 <Button variant="outlined" color="white">
-                  Quero me inscrever
+                  Inscrever-se
                 </Button>
               </Link>
             </div>
@@ -83,7 +83,7 @@ export default function LandingPage() {
               <Image
                 src={Image2}
                 alt="Descrição da imagem"
-                className="w-full h-auto object-contain"
+                className="w-full h-auto object-contain max-sm:mt-4"
               />
             </div>
           </div>

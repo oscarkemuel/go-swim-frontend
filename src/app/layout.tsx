@@ -25,6 +25,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
+        <head>
+          <link rel="icon" href="/icons/favicon.ico" sizes="any" />
+        </head>
         <body
           className={`${roboto.variable} ${robotoMono.variable} antialiased`}
           suppressHydrationWarning
