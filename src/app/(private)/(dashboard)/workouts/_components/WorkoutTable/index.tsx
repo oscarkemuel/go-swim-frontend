@@ -11,6 +11,7 @@ import { useState } from "react";
 import { Workout } from "@/models/Workout";
 import { Button } from "@/components/lib/Button";
 import DeleteWorkoutModal from "../DeleteWorkoutModal";
+import Loading from "./loading";
 
 export function WorkoutTable() {
   const { getMyWorkouts } = useWorkouts();
@@ -25,7 +26,7 @@ export function WorkoutTable() {
   const workouts = getMyWorkouts();
 
   if (workouts.isLoading || workouts.isFetching)
-    return <Skeleton count={10} height={40} />;
+    return <Loading />;
 
   const data = workouts.data?.workouts || [];
 
@@ -96,6 +97,7 @@ export function WorkoutTable() {
             </div>
           ))}
         </div>
+        
         <div className="inline-block max-sm:hidden w-full">
           <table className="min-w-full divide-y divide-gray-200 shadow-md rounded-lg">
             <thead className="bg-gray-100">
