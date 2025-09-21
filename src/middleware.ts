@@ -1,4 +1,3 @@
-import { jwtDecode } from "jwt-decode";
 import { MiddlewareConfig, NextRequest, NextResponse } from "next/server";
 
 const publicRoutes = [
@@ -21,35 +20,24 @@ const REDIRECT_WHEN_NOT_AUTHENTICATED_ROUTE = "/home";
 export function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname;
   const publicRoute = publicRoutes.find((route) => route.path === path);
-  const authToken = request.cookies.get("auth_token");
+  const sessionCookie = request.cookies.get("better-auth.session_token");
 
-  if (authToken && !publicRoute) {
-    const decodedToken = jwtDecode<{ exp: number }>(authToken.value);
-    const currentTime = Math.floor(Date.now() / 1000);
-
-    if (decodedToken.exp < currentTime) {
-      const url = request.nextUrl.clone();
-      url.pathname = REDIRECT_WHEN_NOT_AUTHENTICATED_ROUTE;
-      const response = NextResponse.redirect(url);
-      response.cookies.delete("auth_token");
-      return response;
-    }
-
+  if (sessionCookie && !publicRoute) {
     return NextResponse.next();
   }
 
-  if (!authToken && publicRoute) {
+  if (!sessionCookie && publicRoute) {
     return NextResponse.next();
   }
 
-  if (!authToken && !publicRoute) {
+  if (!sessionCookie && !publicRoute) {
     const url = request.nextUrl.clone();
     url.pathname = REDIRECT_WHEN_NOT_AUTHENTICATED_ROUTE;
     return NextResponse.redirect(url);
   }
 
   if (
-    authToken &&
+    sessionCookie &&
     publicRoute &&
     publicRoute.whenAuthenticated === "redirect"
   ) {
