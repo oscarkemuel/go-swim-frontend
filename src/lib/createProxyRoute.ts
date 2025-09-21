@@ -3,7 +3,7 @@ import { proxyFetch } from "./proxyFetch";
 
 interface CreateProxyRouteParams {
   prefix: string;
-  module: "dashboard" | "workouts" | "achievements";
+  module: "dashboard" | "workouts" | "achievements" | "auth";
 }
 
 export function createProxyRoute({ prefix, module }: CreateProxyRouteParams) {

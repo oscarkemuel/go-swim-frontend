@@ -3,7 +3,7 @@ import { api } from "@/lib/api";
 export const authService = {
   login: async (payload: { email: string; password: string }) =>
     api({
-      url: "/auth/login",
+      url: "/auth/sign-in/email",
       options: {
         method: "POST",
         body: JSON.stringify({ ...payload }),
@@ -11,7 +11,7 @@ export const authService = {
     }),
   logout: async () =>
     api({
-      url: "/auth/logout",
+      url: "/auth/sign-out",
       options: {
         method: "POST",
       },

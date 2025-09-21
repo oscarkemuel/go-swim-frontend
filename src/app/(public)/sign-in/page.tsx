@@ -4,39 +4,35 @@ import { Button } from "@/components/lib/Button";
 import { BiSwim } from "react-icons/bi";
 import Header from "../Header";
 import Footer from "../Footer";
-import { authClient } from "@/lib/auth-client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useAuth } from "@/hooks/useAuth";
 
 export default function LoginPage() {
-  const [isLoading, setIsLoading] = useState(false);
+  const { login } = useAuth();
   const [hasError, setHasError] = useState(false);
   const router = useRouter();
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-    setIsLoading(true);
     setHasError(false);
     const formData = new FormData(event.target as HTMLFormElement);
     const email = formData.get("email");
     const password = formData.get("password");
 
-    const response = await authClient.signIn.email({
-      email: String(email),
-      password: String(password),
-    });
-
-    if (response.error) {
-      setHasError(true);
-      setIsLoading(false);
-      return;
-    }
-
-    if (response.data?.token) {
-      setHasError(false);
-      router.push("/");
-      return;
-    }
+     login.mutate(
+      { email: String(email), password: String(password) },
+      {
+        onSuccess: (request) => {
+          if (request.status === 200) {
+            router.push("/");
+          }
+        },
+        onError: () => {
+          setHasError(true);
+        },
+      }
+    );
   };
 
   return (
@@ -122,7 +118,7 @@ export default function LoginPage() {
           </div> */}
             <Button
               type="submit"
-              isLoading={isLoading}
+              isLoading={login.isPending}
               color="white"
               variant="outlined"
             >
