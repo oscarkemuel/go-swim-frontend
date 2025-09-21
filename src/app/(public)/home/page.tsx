@@ -15,7 +15,7 @@ export default function LandingPage() {
     },
     {
       name: "Gustavo Augusto",
-      feedback: "Perfeito para quem quer monitorar melhor seus treinos.",
+      feedback: "Gostei das conquistas! Me sinto mais motivado a treinar.",
     },
     {
       name: "Mariana Batista",
@@ -26,19 +26,19 @@ export default function LandingPage() {
 
   const features = [
     {
-      title: "Monitore seu progresso",
+      title: "Dashboard",
       description:
         "Acompanhe suas estatísticas de natação, incluindo distância, tempo e ritmo.",
     },
     {
-      title: "Compartilhe com amigos",
+      title: "Compartilhar treinos",
       description:
         "Mostre seus treinos para amigos e familiares com facilidade. Gere imagens atrativas para redes sociais.",
     },
     {
-      title: "Dashboard de dados",
+      title: "Conquistas",
       description:
-        "Visualize seu desempenho com gráficos e estatísticas detalhadas.",
+        "Ganhe medalhas e conquistas ao atingir marcos importantes em seus treinos.",
     },
   ] as const;
 
@@ -51,11 +51,10 @@ export default function LandingPage() {
         <div className="relative flex justify-center text-center px-6 py-24 gap-8 bg-gradient-to-b from-[#6e6ae9] to-[#4a469e] text-white rounded-b-3xl flex-wrap">
           <div className="flex flex-col justify-center gap-8">
             <h1 className="text-4xl md:text-6xl font-bold leading-tight max-w-2xl text-start">
-              Um aplicativo para te auxiliar nos seus treinos de natação
+              Uma aplicação para te auxiliar nos seus treinos de natação
             </h1>
             <p className="max-w-xl text-sm opacity-90 text-start">
-              Sabe aquele aplicativo que te ajuda a organizar seus treinos,
-              acompanhar seu progresso e te manter motivado? Esse é o Go Swim!
+              Já pensou em não ter que ficar contando voltas na piscina? Poder registrar seus treinos sem precisar de um relógio caro? Com o Go Swim, você pode!
             </p>
             <div className="flex gap-4 w-full">
               <Link href="/sign-in" className="w-full">

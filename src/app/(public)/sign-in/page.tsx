@@ -7,10 +7,12 @@ import Footer from "../Footer";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/hooks/useAuth";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 export default function LoginPage() {
   const { login } = useAuth();
   const [hasError, setHasError] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
 
   const handleSubmit = async (event: React.FormEvent) => {
@@ -20,7 +22,7 @@ export default function LoginPage() {
     const email = formData.get("email");
     const password = formData.get("password");
 
-     login.mutate(
+    login.mutate(
       { email: String(email), password: String(password) },
       {
         onSuccess: (request) => {
@@ -82,40 +84,33 @@ export default function LoginPage() {
               >
                 Sua senha
               </label>
-              <input
-                type="password"
-                name="password"
-                id="password"
-                placeholder="••••••••"
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                required
-              />
-            </div>
-            {/* <div className="flex items-start">
-            <div className="flex items-start">
-              <div className="flex items-center h-5">
+              <div className="relative">
                 <input
-                  id="remember"
-                  type="checkbox"
-                  value=""
-                  className="w-4 h-4 border border-gray-300 rounded-sm bg-gray-50 focus:ring-3 focus:ring-blue-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800"
+                  type={showPassword ? "text" : "password"}
+                  name="password"
+                  id="password"
+                  placeholder="••••••••"
+                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg 
+                  focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 pr-10"
                   required
                 />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword((prev) => !prev)}
+                  className="absolute inset-y-0 right-3 flex items-center text-gray-500 hover:text-gray-700"
+                >
+                  {showPassword ? <FaEyeSlash /> : <FaEye />}
+                </button>
               </div>
-              <label
-                htmlFor="remember"
-                className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-              >
-                Remember me
-              </label>
             </div>
-            <a
-              href="#"
-              className="ms-auto text-sm text-blue-700 hover:underline dark:text-blue-500"
-            >
-              Lost Password?
-            </a>
-          </div> */}
+            {/* <div className="flex items-start">
+              <a
+                href="#"
+                className="ms-auto text-sm text-white hover:underline"
+              >
+                Esqueci a senha
+              </a>
+            </div> */}
             <Button
               type="submit"
               isLoading={login.isPending}
