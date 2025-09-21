@@ -5,5 +5,8 @@ export async function POST() {
   const cookieStore = await cookies();
   cookieStore.getAll().forEach((c) => cookieStore.delete(c.name));
 
-  return NextResponse.json({ message: "Logout successful" }, { status: 200, headers: { 'Set-Cookie': '' } });
+  return NextResponse.json(
+    { message: "Logout successful" },
+    { status: 200 }
+  );
 }

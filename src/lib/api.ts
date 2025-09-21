@@ -1,14 +1,19 @@
-interface apiParams {
+interface ApiParams {
   url: string;
   options?: RequestInit;
   params?: Record<string, any>;
+}
+
+interface ApiError extends Error {
+  status?: number;
+  data?: any;
 }
 
 export async function api<T>({
   url,
   options,
   params,
-}: apiParams): Promise<{ data: T | null; status: number }> {
+}: ApiParams): Promise<{ data: T | null; status: number }> {
   const res = await fetch(
     `/api${url}${params ? `?${new URLSearchParams(params)}` : ""}`,
     {
@@ -22,13 +27,22 @@ export async function api<T>({
     }
   );
 
-  if (res.status === 401) {
-    await fetch("/api/auth/clear", { method: "POST", credentials: "include" });
-    return { data: null, status: 401 };
-  }
-
   if (!res.ok) {
-    throw new Error("Failed to fetch API");
+    const error: ApiError = new Error("Failed to fetch API");
+    error.status = res.status;
+    
+
+    try {
+      error.data = await res.json();
+    } catch {
+      error.data = null;
+    }
+
+    if (res.status === 401 && error.data?.error !== "Invalid credentials") {
+      await fetch("/api/auth/clear", { method: "POST" });
+    }
+
+    throw error;
   }
 
   let data: T | null = null;
