@@ -22,6 +22,11 @@ export async function api<T>({
     }
   );
 
+  if (res.status === 401) {
+    await fetch("/api/auth/clear", { method: "POST", credentials: "include" });
+    return { data: null, status: 401 };
+  }
+
   if (!res.ok) {
     throw new Error("Failed to fetch API");
   }
