@@ -108,7 +108,9 @@ export default function TimerPage() {
   };
 
   const actualData: Partial<Workout> = {
-    date: new Date().toISOString(),
+    date: new Date(
+      new Date().setHours(12, 0, 0, 0)
+    ).toISOString(),
     fatigueLevel: 5,
     meters: sprints.reduce((acc, sprint) => acc + sprint.meters, 0),
     style: "livre",
