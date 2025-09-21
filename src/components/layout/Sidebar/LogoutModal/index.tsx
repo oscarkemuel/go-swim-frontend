@@ -1,22 +1,27 @@
 import { Button } from "@/components/lib/Button";
 import { Modal } from "@/components/lib/Modal";
 import { ModalProps } from "@/components/lib/Modal/types";
-import { useAuth } from "@/hooks/useAuth";
+import { authClient } from "@/lib/auth-client";
+import { useState } from "react";
 
-interface LogoutModalProps
-  extends Omit<ModalProps, "title" | "children"> {
+interface LogoutModalProps extends Omit<ModalProps, "title" | "children"> {
   onSuccess: () => void;
 }
 
 export default function LogoutModal(props: LogoutModalProps) {
-  const { logout } = useAuth();
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleLogout = () => {
-    logout.mutate(undefined, {
-      onSuccess: () => {
-        props.onSuccess();
-      },
-    });
+  const handleLogout = async () => {
+    setIsLoading(true);
+    
+    const response = await authClient.signOut();
+
+    if (response.error) {
+      setIsLoading(false);
+      return;
+    }
+
+    props.onSuccess();
   };
 
   return (
@@ -24,26 +29,21 @@ export default function LogoutModal(props: LogoutModalProps) {
       {...props}
       title={`Sair do Go Swim`}
       subtitle="Você será redirecionado para a página de login"
-      disableOverlayClick={logout.isPending}
+      disableOverlayClick={isLoading}
     >
-      <p className="my-8">
-        Tem certeza que deseja sair?
-      </p>
+      <p className="my-8">Tem certeza que deseja sair?</p>
 
       <div className="flex justify-end mt-4 gap-4">
         <Button
           onClick={props.onClose}
           color="gray"
           variant="outlined"
-          disabled={logout.isPending}
+          disabled={isLoading}
         >
           Cancelar
         </Button>
 
-        <Button
-          onClick={handleLogout}
-          isLoading={logout.isPending}
-        >
+        <Button onClick={handleLogout} isLoading={isLoading}>
           Sair
         </Button>
       </div>

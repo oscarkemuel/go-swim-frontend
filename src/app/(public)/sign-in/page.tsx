@@ -1,33 +1,42 @@
 "use client";
 
 import { Button } from "@/components/lib/Button";
-import { useAuth } from "@/hooks/useAuth";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { BiSwim } from "react-icons/bi";
 import Header from "../Header";
 import Footer from "../Footer";
+import { authClient } from "@/lib/auth-client";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
-  const { login } = useAuth();
+  const [isLoading, setIsLoading] = useState(false);
+  const [hasError, setHasError] = useState(false);
   const router = useRouter();
 
-  const handleSubmit = (event: React.FormEvent) => {
+  const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
+    setIsLoading(true);
+    setHasError(false);
     const formData = new FormData(event.target as HTMLFormElement);
     const email = formData.get("email");
     const password = formData.get("password");
 
-    login.mutate(
-      { email: String(email), password: String(password) },
-      {
-        onSuccess: (request) => {
-          if (request.status === 201) {
-            router.push("/");
-          }
-        },
-      }
-    );
+    const response = await authClient.signIn.email({
+      email: String(email),
+      password: String(password),
+    });
+
+    if (response.error) {
+      setHasError(true);
+      setIsLoading(false);
+      return;
+    }
+
+    if (response.data?.token) {
+      setHasError(false);
+      router.push("/");
+      return;
+    }
   };
 
   return (
@@ -46,7 +55,7 @@ export default function LoginPage() {
               </div>
 
               <div>
-                {login.isError && (
+                {hasError && (
                   <p className="text-white text-sm underline">
                     Ops! Algo deu errado. Tente novamente. Caso não funcione,
                     entre em contato com o suporte.
@@ -113,7 +122,7 @@ export default function LoginPage() {
           </div> */}
             <Button
               type="submit"
-              isLoading={login.isPending}
+              isLoading={isLoading}
               color="white"
               variant="outlined"
             >
