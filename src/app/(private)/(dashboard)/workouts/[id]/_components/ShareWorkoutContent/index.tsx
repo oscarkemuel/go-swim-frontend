@@ -63,7 +63,11 @@ export default function ShareWorkoutContent({ query }: ShareWorkoutPageProps) {
       const generatedImageResult = await generateImage({
         canvasRef,
         imageUrl,
-        data: imageData,
+        data: {
+          ...imageData,
+          rhythm: selectedRhythm ? imageData.rhythm : undefined,
+        },
+        placement: "center",
       });
 
       setGeneratedImage(generatedImageResult);
@@ -78,15 +82,40 @@ export default function ShareWorkoutContent({ query }: ShareWorkoutPageProps) {
     setSelectedRhythm(rhythm);
   };
 
-  const handleDownload = () => {
-    if (!generatedImage) return;
-
+  const downloadImage = (dataUrl: string) => {
     const link = document.createElement("a");
-    link.href = generatedImage;
+    link.href = dataUrl;
     link.download = `workout-${workout.id}.png`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+  }
+
+  const handleDownloadOrShare = async () => {
+    if (!generatedImage) return;
+
+    // Checa se o navegador suporta Web Share API com arquivos
+    if (navigator.canShare && navigator.canShare({ files: [] })) {
+      try {
+        // Converte base64 em Blob
+        const res = await fetch(generatedImage);
+        const blob = await res.blob();
+        const file = new File([blob], `workout-${workout.id}.png`, {
+          type: blob.type,
+        });
+
+        // Abre menu de compartilhamento nativo
+        await navigator.share({
+          title: `Workout ${workout.id}`,
+          text: "Olha meu treino!",
+          files: [file],
+        });
+      } catch (err) {
+        downloadImage(generatedImage);
+      }
+    } else {
+      downloadImage(generatedImage);
+    }
   };
 
   return (
@@ -130,13 +159,13 @@ export default function ShareWorkoutContent({ query }: ShareWorkoutPageProps) {
 
           <div className="mt-4 w-full">
             <Button
-              onClick={handleDownload}
+              onClick={handleDownloadOrShare}
               disabled={!generatedImage}
               variant="outlined"
             >
               <div className="flex items-center justify-center gap-2">
                 <FaDownload />
-                Baixar imagem
+                {navigator.canShare({ files: [] }) ? "Compartilhar" : "Baixar imagem"}
               </div>
             </Button>
           </div>
