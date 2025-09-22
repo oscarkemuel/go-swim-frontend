@@ -5,7 +5,7 @@ export default function PublicLayout({
 }>) {
   return (
     <div className="h-screen text-gray-800 bg-[#F3F6FD]">
-      <main className="h-">
+      <main>
         {children}
       </main>
     </div>

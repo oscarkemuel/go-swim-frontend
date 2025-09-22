@@ -15,7 +15,7 @@ export default function AchievementsList() {
   const achievementsData = achievements.data?.achievements || [];
 
   return (
-    <div>
+    <div className="flex gap-4 flex-wrap">
       {achievementsData.map((achievement) => {
         const IconComponent = iconNames.includes(achievement.icon as any)
           ? (achievement.icon as any)
@@ -24,7 +24,7 @@ export default function AchievementsList() {
         return (
           <div
             key={achievement.id}
-            className={`flex items-center gap-4 p-4 mb-4 rounded-xl ${
+            className={`flex items-center gap-4 p-4 rounded-xl min-w-[400px] max-sm:min-w-full flex-1 ${
               achievement.unlocked
                 ? "bg-green-100"
                 : "bg-gray-100 border-gray-400"

@@ -18,7 +18,7 @@ export default function Header({
   backButton,
 }: HeaderProps) {
   return (
-    <div className="w-full mb-8 flex items-center justify-between flex-wrap gap-4">
+    <div className="w-full mb-8 flex items-center justify-between gap-4 max-md:flex-wrap">
       <div className="w-full flex items-center gap-4 max-sm:justify-center">
         {backButton && (
           <Button

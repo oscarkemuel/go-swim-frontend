@@ -147,7 +147,7 @@ export default function TimerPage() {
 
   return (
     <>
-      <div className="h-screen pt-10">
+      <div className="pt-10">
         <div className="w-full flex flex-col items-center justify-center">
           {/* Pool size buttons */}
           <div className="flex gap-2 mb-4 max-w-[315px] overflow-x-auto pb-3">

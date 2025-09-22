@@ -5,7 +5,7 @@ import Filters from "./_components/Filters";
 
 export default function DashboardPage() {
   return (
-    <div className="h-screen">
+    <div>
       <Header
         title="Visão geral de performance"
         subtitle="Acompanhe seu desempenho ao longo do tempo"

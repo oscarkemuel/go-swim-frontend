@@ -3,7 +3,7 @@ import AchievementsList from "./_components/AchievementList";
 
 export default function AchievementsPage() {
   return (
-    <div className="h-screen">
+    <div>
       <Header title="Minhas Conquistas" subtitle="Acompanhe seu progresso" />
 
       <AchievementsList />
