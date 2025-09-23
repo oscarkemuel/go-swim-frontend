@@ -9,6 +9,22 @@ interface ApiError extends Error {
   data?: any;
 }
 
+export interface ApiPaginationParams {
+  page?: number;
+  limit?: number;
+}
+
+export interface ApiResponseWithPagination{
+  items: any[];
+  meta: {
+    currentPage: number;
+    itemCount: number;
+    itemsPerPage: number;
+    totalItems: number;
+    totalPages: number;
+  };
+}
+
 export async function api<T>({
   url,
   options,

@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import { Roboto, Roboto_Mono } from "next/font/google";
 import "./globals.css";
+import 'rc-pagination/assets/index.css';
 import { Providers } from "./providers";
+import { NuqsAdapter } from "nuqs/adapters/next";
 
 const roboto = Roboto({
   variable: "--font-roboto",
@@ -25,15 +27,17 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-        <head>
-          <link rel="icon" href="/icons/favicon.ico" sizes="any" />
-        </head>
-        <body
-          className={`${roboto.variable} ${robotoMono.variable} antialiased`}
-          suppressHydrationWarning
-        >
-          <Providers>{children}</Providers>
-        </body>
+      <head>
+        <link rel="icon" href="/icons/favicon.ico" sizes="any" />
+      </head>
+      <body
+        className={`${roboto.variable} ${robotoMono.variable} antialiased`}
+        suppressHydrationWarning
+      >
+        <Providers>
+          <NuqsAdapter>{children}</NuqsAdapter>
+        </Providers>
+      </body>
     </html>
   );
 }
