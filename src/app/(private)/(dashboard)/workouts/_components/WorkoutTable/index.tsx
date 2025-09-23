@@ -13,6 +13,7 @@ import { Button } from "@/components/lib/Button";
 import DeleteWorkoutModal from "../DeleteWorkoutModal";
 import Loading from "./loading";
 import { usePagination } from "@/hooks/usePaginations";
+import { EmptyState } from "@/components/lib/EmptyState";
 
 export function WorkoutTable() {
   const { page, setPage, limit, setLimit } = usePagination();
@@ -25,7 +26,7 @@ export function WorkoutTable() {
     workout: null,
   });
 
-  const workouts = getMyWorkouts();
+  const workouts = getMyWorkouts(page, limit);
 
   if (workouts.isLoading || workouts.isFetching) return <Loading />;
 
@@ -33,9 +34,13 @@ export function WorkoutTable() {
 
   if (data.length === 0 && !workouts.isLoading && !workouts.isFetching) {
     return (
-      <div className="text-center text-gray-500 mt-10">
-        Nenhum treino registrado ainda.
-      </div>
+      <EmptyState
+        icon="dumbbell"
+        title="Nenhuma atividade encontrada"
+        message="Parece que você ainda não registrou nenhum treino."
+        link="/timer"
+        linkText="Iniciar meu primeiro treino"
+      />
     );
   }
 

@@ -1,7 +1,6 @@
 import { Workout } from "@/models/Workout";
 import { workoutService } from "@/services/workoutService";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { usePagination } from "./usePaginations";
 
 interface UpdateWorkoutInput {
   id: number;
@@ -10,9 +9,8 @@ interface UpdateWorkoutInput {
 
 export function useWorkouts() {
   const queryClient = useQueryClient();
-  const { page, limit } = usePagination();
 
-  const getMyWorkouts = () => {
+  const getMyWorkouts = (page: number, limit: number) => {
     return useQuery({
       queryKey: ["my-workouts", page, limit],
       queryFn: () => workoutService.getAll({ page, limit }),
