@@ -1,3 +1,8 @@
+export interface Sprint {
+  timeInSeconds: number;
+  meters: number;
+}
+
 export interface Workout {
   id: number;
   date: string;
@@ -5,4 +10,5 @@ export interface Workout {
   fatigueLevel: number;
   timeInSeconds: number;
   style: string;
+  sprints: Sprint[];
 }

@@ -107,12 +107,8 @@ export function WorkoutTable() {
                     </span>
                   </div>
                   <div className="text-sm text-gray-600">
-                    Duração: {formatTime(w.timeInSeconds)} | Ritmo (50m):{" "}
-                    {w.rhythmPer50m ? formatTime(w.rhythmPer50m, true) : "N/A"}{" "}
-                    | Ritmo (100m):{" "}
-                    {w.rhythmPer100m
-                      ? formatTime(w.rhythmPer100m, true)
-                      : "N/A"}
+                    Duração: {formatTime(w.timeInSeconds)} | Total de sprints:{" "}
+                    {w.sprintCount || "N/A"}
                   </div>
                 </div>
                 <div className="flex gap-2">
@@ -148,10 +144,7 @@ export function WorkoutTable() {
                   Duração
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Ritmo (50m)
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Ritmo (100m)
+                  Total de sprints
                 </th>
                 <th className="px-6 py-3"></th>
               </tr>
@@ -169,11 +162,8 @@ export function WorkoutTable() {
                     {formatTime(w.timeInSeconds)}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
-                    {w.rhythmPer50m ? formatTime(w.rhythmPer50m, true) : "N/A"}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
-                    {w.rhythmPer100m
-                      ? formatTime(w.rhythmPer100m, true)
+                    {w.sprintCount
+                      ? w.sprintCount
                       : "N/A"}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-right">
