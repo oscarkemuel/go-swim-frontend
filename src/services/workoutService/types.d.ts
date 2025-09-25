@@ -3,14 +3,14 @@ import { Workout } from "@/models/Workout";
 
 export interface GetAllResponse extends ApiResponseWithPagination {
   items: (Workout & {
-    rhythmPer100m: number;
-    rhythmPer50m: number;
+    sprintCount: number;
   })[];
 }
 
 export interface GetByIdResponse {
   workout: Workout & {
-    rhythmPer100m: number;
-    rhythmPer50m: number;
+    rhythmPer100m?: number;
+    rhythmPer50m?: number;
+    rhythm: Record<number, number>;
   };
 }

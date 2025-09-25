@@ -10,23 +10,30 @@ import FinishConfirmModal from "./_components/FinishConfirmModal";
 import {
   LOCAL_STORAGE_CURRENT_SPRINTS_KEY,
   LOCAL_STORAGE_CURRENT_TIMER_KEY,
+  LOCAL_STORAGE_CURRENT_MODEL_SAVE_SPRINT_KEY,
 } from "@/constants";
 import { formatTime } from "@/utils";
 import DeleteSprintModal from "./_components/DeleteSprintModal";
 
 export default function TimerPage() {
   const [sprints, setSprints] = useState<Sprint[]>([]);
-  const [poolSize, setPoolSize] = useState(25);
+  const [poolSize, setPoolSize] = useState(50);
 
   const [startTimestamp, setStartTimestamp] = useState<number | null>(null);
   const [pausedElapsed, setPausedElapsed] = useState(0);
   const [elapsed, setElapsed] = useState(0);
   const [isRunning, setIsRunning] = useState(false);
+
+  const [modelSaveSprint, setModelSaveSprint] = useState<"sprint" | "free">(
+    "sprint"
+  );
+
   const [resetConfirmModalOpen, setResetConfirmModalOpen] = useState(false);
   const [finishConfirmModalOpen, setFinishConfirmModalOpen] = useState(false);
   const [currentSprintTimeStart, setCurrentSprintTimeStart] = useState<
     number | null
   >(null);
+
   const [deleteSprintIndex, setDeleteSprintIndex] = useState<number | null>(
     null
   );
@@ -57,6 +64,14 @@ export default function TimerPage() {
     const savedSprints = localStorage.getItem(
       LOCAL_STORAGE_CURRENT_SPRINTS_KEY
     );
+
+    const savedModelSaveSprint = localStorage.getItem(
+      LOCAL_STORAGE_CURRENT_MODEL_SAVE_SPRINT_KEY
+    );
+
+    if (savedModelSaveSprint === "sprint" || savedModelSaveSprint === "free") {
+      setModelSaveSprint(savedModelSaveSprint);
+    }
 
     if (savedTimer) {
       const savedElapsed = parseInt(savedTimer);
@@ -99,6 +114,7 @@ export default function TimerPage() {
     setIsRunning(false);
     localStorage.removeItem(LOCAL_STORAGE_CURRENT_TIMER_KEY);
     localStorage.removeItem(LOCAL_STORAGE_CURRENT_SPRINTS_KEY);
+    localStorage.removeItem(LOCAL_STORAGE_CURRENT_MODEL_SAVE_SPRINT_KEY);
   };
 
   const actualData: Partial<Workout> = {
@@ -107,7 +123,7 @@ export default function TimerPage() {
     meters: sprints.reduce((acc, sprint) => acc + sprint.meters, 0),
     style: "livre",
     timeInSeconds: elapsed,
-    sprints,
+    sprints: modelSaveSprint === "sprint" ? sprints : [],
   };
 
   const onSuccessResetTimer = () => {
@@ -125,6 +141,8 @@ export default function TimerPage() {
   const handleResetTimer = () => {
     if (isRunning) handlePause();
     setResetConfirmModalOpen(true);
+    setModelSaveSprint("sprint");
+    setCurrentSprintTimeStart(null);
   };
 
   const handleFinishTraining = () => {
@@ -137,6 +155,16 @@ export default function TimerPage() {
 
   const minutes = Math.floor(elapsed / 60);
   const seconds = elapsed % 60;
+
+  const handleSaveMeters = () => {
+    const newSprint: Sprint = { timeInSeconds: elapsed, meters: poolSize };
+    setSprints((prev) => [...prev, newSprint]);
+    localStorage.setItem(
+      LOCAL_STORAGE_CURRENT_SPRINTS_KEY,
+      JSON.stringify([...sprints, newSprint])
+    );
+    toast.success(`Sprint de ${poolSize}m salvo!`);
+  };
 
   const handleInitSprint = () => {
     if (isRunning) {
@@ -175,6 +203,11 @@ export default function TimerPage() {
     toast.success("Sprint removido!");
   };
 
+  const handleSetModelSaveSprint = (mode: "sprint" | "free") => {
+    setModelSaveSprint(mode);
+    localStorage.setItem(LOCAL_STORAGE_CURRENT_MODEL_SAVE_SPRINT_KEY, mode);
+  };
+
   return (
     <>
       <div className="pt-10">
@@ -192,9 +225,28 @@ export default function TimerPage() {
             ))}
           </div>
 
-          <div className="mb-4 text-lg font-medium">
-            Distância total: {totalDistance}m
-          </div>
+          {!isRunning && elapsed === 0 && (
+            <div className="flex w-full max-w-[300px] gap-2 my-3">
+              <Button
+                onClick={() => handleSetModelSaveSprint("sprint")}
+                variant={modelSaveSprint === "sprint" ? "filled" : "outlined"}
+              >
+                Modo sprint
+              </Button>
+              <Button
+                onClick={() => handleSetModelSaveSprint("free")}
+                variant={modelSaveSprint === "free" ? "filled" : "outlined"}
+              >
+                Modo livre
+              </Button>
+            </div>
+          )}
+
+          {(isRunning || pausedElapsed > 0) && (
+            <div className="my-3 text-lg font-medium">
+              Distância total: {totalDistance}m
+            </div>
+          )}
 
           {currentSprintTimeStart !== null && (
             <div className="text-xl font-mono text-blue-600 mb-4 animate-pulse">
@@ -222,20 +274,34 @@ export default function TimerPage() {
               </Button>
             )}
 
-            <Button
-              onClick={
-                currentSprintTimeStart === null
-                  ? handleInitSprint
-                  : handleEndSprint
-              }
-              disabled={!isRunning || finishConfirmModalOpen}
-              color={currentSprintTimeStart === null ? "green" : "red"}
-              className={currentSprintTimeStart !== null ? "animate-pulse" : ""}
-            >
-              {currentSprintTimeStart === null
-                ? "Iniciar sprint"
-                : `Finalizar sprint (${poolSize}m)`}
-            </Button>
+            {modelSaveSprint === "free" && (
+              <Button
+                onClick={handleSaveMeters}
+                disabled={!isRunning || finishConfirmModalOpen}
+                color="green"
+              >
+                Completar {poolSize}m
+              </Button>
+            )}
+
+            {modelSaveSprint === "sprint" && (
+              <Button
+                onClick={
+                  currentSprintTimeStart === null
+                    ? handleInitSprint
+                    : handleEndSprint
+                }
+                disabled={!isRunning || finishConfirmModalOpen}
+                color={currentSprintTimeStart === null ? "green" : "red"}
+                className={
+                  currentSprintTimeStart !== null ? "animate-pulse" : ""
+                }
+              >
+                {currentSprintTimeStart === null
+                  ? "Iniciar sprint"
+                  : `Finalizar sprint (${poolSize}m)`}
+              </Button>
+            )}
 
             <Button
               onClick={handleFinishTraining}
@@ -263,7 +329,7 @@ export default function TimerPage() {
                 {sprints.map((s, idx) => (
                   <li
                     key={idx}
-                    className="text-gray-700 bg-blue-50 p-2 rounded list-none cursor-pointer hover:bg-blue-100 flex justify-between items-center"
+                    className="text-gray-700 bg-blue-50 p-2 rounded list-free cursor-pointer hover:bg-blue-100 flex justify-between items-center"
                     onClick={() => handleDeleteSprint(idx)}
                   >
                     {formatTime(s.timeInSeconds)} - ({s.meters}m)

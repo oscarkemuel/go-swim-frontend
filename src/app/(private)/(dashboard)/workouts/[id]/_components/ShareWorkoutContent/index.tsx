@@ -15,7 +15,7 @@ interface ShareWorkoutPageProps {
 export default function ShareWorkoutContent({ query }: ShareWorkoutPageProps) {
   const [generatedImage, setGeneratedImage] = useState<string | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
-  const [selectedRhythm, setSelectedRhythm] = useState<"50m" | "100m">("50m");
+  const [selectedRhythm, setSelectedRhythm] = useState<number>(0);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -39,13 +39,29 @@ export default function ShareWorkoutContent({ query }: ShareWorkoutPageProps) {
 
   const workout = data.workout;
 
+  const hasRhythm = Object.keys(workout.rhythm).length > 0;
+
+  const defaultRhythms = [50, 100];
+
+  const getSelectedRhythm = () => {
+    if (!hasRhythm) {
+      const defaultFormatedRhythms = {
+        50: `${formatTime(workout.rhythmPer50m!)} / 50m`,
+        100: `${formatTime(workout.rhythmPer100m!)} / 100m`,
+      };
+
+      return defaultFormatedRhythms[selectedRhythm as 50 | 100];
+    }
+
+    if (selectedRhythm === 0) return undefined;
+
+    return `${formatTime(workout.rhythm[selectedRhythm])} / ${selectedRhythm}m`;
+  };
+
   const imageData = {
     distance: `${workout.meters}m`,
     time: formatTimeToMinutes(workout.timeInSeconds),
-    rhythm:
-      selectedRhythm === "50m"
-        ? `${formatTime(workout.rhythmPer50m, true)} / 50m`
-        : `${formatTime(workout.rhythmPer100m, true)} / 100m`,
+    rhythm: getSelectedRhythm(),
   };
 
   const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -63,10 +79,7 @@ export default function ShareWorkoutContent({ query }: ShareWorkoutPageProps) {
       const generatedImageResult = await generateImage({
         canvasRef,
         imageUrl,
-        data: {
-          ...imageData,
-          rhythm: selectedRhythm ? imageData.rhythm : undefined,
-        },
+        data: imageData,
         placement: "center",
       });
 
@@ -76,10 +89,13 @@ export default function ShareWorkoutContent({ query }: ShareWorkoutPageProps) {
     setIsGenerating(false);
   };
 
-  const handleRhythmChange = (rhythm: "50m" | "100m") => {
+  const handleRhythmChange = (rhythm: number) => {
     inputRef.current!.value = "";
     setGeneratedImage(null);
-    setSelectedRhythm(rhythm);
+
+    rhythm === selectedRhythm
+      ? setSelectedRhythm(0)
+      : setSelectedRhythm(rhythm);
   };
 
   const downloadImage = (dataUrl: string) => {
@@ -89,7 +105,7 @@ export default function ShareWorkoutContent({ query }: ShareWorkoutPageProps) {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-  }
+  };
 
   const handleDownloadOrShare = async () => {
     if (!generatedImage) return;
@@ -123,23 +139,31 @@ export default function ShareWorkoutContent({ query }: ShareWorkoutPageProps) {
       <div>
         <canvas ref={canvasRef} style={{ display: "none" }} />
 
-        <ul className="flex text-sm font-medium text-center text-gray-500 dark:text-gray-400 mb-3">
-          <li className="me-2">
-            <Button
-              onClick={() => handleRhythmChange("50m")}
-              variant={selectedRhythm === "50m" ? "filled" : "outlined"}
-            >
-              Rítmo/50m
-            </Button>
-          </li>
-          <li className="me-2">
-            <Button
-              onClick={() => handleRhythmChange("100m")}
-              variant={selectedRhythm === "100m" ? "filled" : "outlined"}
-            >
-              Rítmo/100m
-            </Button>
-          </li>
+        <ul className="flex text-sm font-medium text-center text-gray-500 dark:text-gray-400 mb-3 flex-wrap gap-2">
+          {!hasRhythm &&
+            defaultRhythms.map((rhythm) => (
+              <li key={rhythm}>
+                <Button
+                  onClick={() => handleRhythmChange(rhythm)}
+                  variant={selectedRhythm === rhythm ? "filled" : "outlined"}
+                >
+                  Rítmo/{rhythm}
+                </Button>
+              </li>
+            ))}
+          {hasRhythm &&
+            Object.keys(workout.rhythm).map((distance) => (
+              <li key={distance}>
+                <Button
+                  onClick={() => handleRhythmChange(Number(distance))}
+                  variant={
+                    selectedRhythm === Number(distance) ? "filled" : "outlined"
+                  }
+                >
+                  Rítmo/{distance}
+                </Button>
+              </li>
+            ))}
         </ul>
 
         <div className="cursor-pointer  mt-2">
@@ -165,7 +189,9 @@ export default function ShareWorkoutContent({ query }: ShareWorkoutPageProps) {
             >
               <div className="flex items-center justify-center gap-2">
                 <FaDownload />
-                {navigator.canShare({ files: [] }) ? "Compartilhar" : "Baixar imagem"}
+                {navigator.canShare({ files: [] })
+                  ? "Compartilhar"
+                  : "Baixar imagem"}
               </div>
             </Button>
           </div>
