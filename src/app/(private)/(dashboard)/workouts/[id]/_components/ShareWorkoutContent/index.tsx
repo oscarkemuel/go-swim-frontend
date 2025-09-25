@@ -39,7 +39,7 @@ export default function ShareWorkoutContent({ query }: ShareWorkoutPageProps) {
 
   const workout = data.workout;
 
-  const hasRhythm = Object.keys(workout.rhythm).length > 0;
+  const hasRhythm = workout.rhythm.length > 0;
 
   const defaultRhythms = [50, 100];
 
@@ -55,7 +55,13 @@ export default function ShareWorkoutContent({ query }: ShareWorkoutPageProps) {
 
     if (selectedRhythm === 0) return undefined;
 
-    return `${formatTime(workout.rhythm[selectedRhythm])} / ${selectedRhythm}m`;
+    const selectedRhythmExists = workout.rhythm.find(
+      (r) => r.meters === selectedRhythm
+    );
+
+    return `${formatTime(
+      selectedRhythmExists!.timeInSeconds
+    )} / ${selectedRhythm}m`;
   };
 
   const imageData = {
@@ -139,7 +145,7 @@ export default function ShareWorkoutContent({ query }: ShareWorkoutPageProps) {
       <div>
         <canvas ref={canvasRef} style={{ display: "none" }} />
 
-        <ul className="flex text-sm font-medium text-center text-gray-500 dark:text-gray-400 mb-3 flex-wrap gap-2">
+        <ul className="flex text-sm font-medium text-center text-gray-500 dark:text-gray-400 mb-3 gap-2 overflow-x-auto pb-2">
           {!hasRhythm &&
             defaultRhythms.map((rhythm) => (
               <li key={rhythm}>
@@ -152,15 +158,15 @@ export default function ShareWorkoutContent({ query }: ShareWorkoutPageProps) {
               </li>
             ))}
           {hasRhythm &&
-            Object.keys(workout.rhythm).map((distance) => (
-              <li key={distance}>
+            workout.rhythm.map((rhythm) => (
+              <li key={rhythm.meters}>
                 <Button
-                  onClick={() => handleRhythmChange(Number(distance))}
+                  onClick={() => handleRhythmChange(rhythm.meters)}
                   variant={
-                    selectedRhythm === Number(distance) ? "filled" : "outlined"
+                    selectedRhythm === rhythm.meters ? "filled" : "outlined"
                   }
                 >
-                  Rítmo/{distance}
+                  Rítmo/{rhythm.meters}
                 </Button>
               </li>
             ))}

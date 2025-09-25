@@ -7,10 +7,15 @@ export interface GetAllResponse extends ApiResponseWithPagination {
   })[];
 }
 
+interface Rhythm {
+  meters: number;
+  timeInSeconds: number;
+}
+
 export interface GetByIdResponse {
   workout: Workout & {
     rhythmPer100m?: number;
     rhythmPer50m?: number;
-    rhythm: Record<number, number>;
+    rhythm: Rhythm[];
   };
 }

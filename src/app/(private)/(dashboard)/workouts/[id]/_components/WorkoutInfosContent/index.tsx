@@ -53,10 +53,10 @@ export default function WorkoutInfosContent({
         </div>
 
         {hasRhythms &&
-          Object.entries(workout.rhythm).map(([distance, time]) => (
-            <div key={distance} className="flex justify-between border-b pb-2">
-              <span className="text-gray-600">Ritmo / {distance}m</span>
-              <span className="font-medium">{formatTime(time)}</span>
+          workout.rhythm.map((r) => (
+            <div key={r.meters} className="flex justify-between border-b pb-2">
+              <span className="text-gray-600">Ritmo / {r.meters}m</span>
+              <span className="font-medium">{formatTime(r.timeInSeconds)}</span>
             </div>
           ))}
 
