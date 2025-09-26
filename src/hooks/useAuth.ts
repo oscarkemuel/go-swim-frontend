@@ -10,5 +10,13 @@ export function useAuth() {
     mutationFn: authService.logout,
   });
 
-  return { login, logout };
+  const forgotPassword = useMutation({
+    mutationFn: authService.forgotPassword,
+  });
+
+  const resetPassword = useMutation({
+    mutationFn: authService.resetPassword,
+  });
+
+  return { login, logout, forgotPassword, resetPassword };
 }

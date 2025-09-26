@@ -8,6 +8,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/hooks/useAuth";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import Link from "next/link";
 
 export default function LoginPage() {
   const { login } = useAuth();
@@ -103,14 +104,14 @@ export default function LoginPage() {
                 </button>
               </div>
             </div>
-            {/* <div className="flex items-start">
-              <a
-                href="#"
+            <div className="flex items-start">
+              <Link
                 className="ms-auto text-sm text-white hover:underline"
+                href="/forgot-password"
               >
                 Esqueci a senha
-              </a>
-            </div> */}
+              </Link>
+            </div>
             <Button
               type="submit"
               isLoading={login.isPending}

@@ -10,6 +10,14 @@ const publicRoutes = [
     whenAuthenticated: "redirect",
   },
   {
+    path: "/forgot-password",
+    whenAuthenticated: "redirect",
+  },
+  {
+    path: "/reset-password",
+    whenAuthenticated: "redirect",
+  },
+  {
     path: "/home",
     whenAuthenticated: "next",
   },
