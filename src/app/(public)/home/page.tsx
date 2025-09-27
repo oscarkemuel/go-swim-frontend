@@ -1,9 +1,17 @@
 import { Button } from "@/components/lib/Button";
-import Image01 from "@/../public/images/about-image.svg";
+import ImageBase from "@/../public/images/about-image.svg";
+import Image01 from "@/../public/images/about-image-01.png";
+import Image02 from "@/../public/images/about-image-02.png";
+import Image03 from "@/../public/images/about-image-03.png";
+import Image04 from "@/../public/images/about-image-04.png";
+import Image05 from "@/../public/images/about-image-05.png";
+import Image06 from "@/../public/images/about-image-06.png";
 import Image from "next/image";
 import Link from "next/link";
 import Header from "../Header";
 import Footer from "../Footer";
+import PlanCard, { Plan } from "./_components/PlanCard";
+import { Camera, CircleGauge, Medal } from "lucide-react";
 
 export default function LandingPage() {
   const testimonials = [
@@ -17,7 +25,7 @@ export default function LandingPage() {
       feedback: "Gostei das conquistas! Me sinto mais motivado a treinar.",
     },
     {
-      name: "Mariana Batista",
+      name: "Mariana Monteiro",
       feedback:
         "O programa me ajudou a compartilhar meus treinos no Instagram sem precisar de um relógio.",
     },
@@ -28,18 +36,65 @@ export default function LandingPage() {
       title: "Dashboard",
       description:
         "Acompanhe suas estatísticas de natação, incluindo distância, tempo e ritmo.",
+      icon: <CircleGauge />,
     },
     {
       title: "Compartilhar treinos",
       description:
         "Mostre seus treinos para amigos e familiares com facilidade. Gere imagens atrativas para redes sociais.",
+      icon: <Camera />,
     },
     {
       title: "Conquistas",
       description:
         "Ganhe medalhas e conquistas ao atingir marcos importantes em seus treinos.",
+      icon: <Medal />,
     },
   ] as const;
+
+  const featuresImages = [
+    {
+      title: "Timer",
+      image: Image01,
+    },
+    {
+      title: "Dashboard 01",
+      image: Image02,
+    },
+    {
+      title: "Dashboard 02",
+      image: Image03,
+    },
+    {
+      title: "Conquistas",
+      image: Image04,
+    },
+    {
+      title: "Treinos",
+      image: Image05,
+    },
+    {
+      title: "Compartilhar treino",
+      image: Image06,
+    },
+  ] as const;
+
+  const plans = [
+    {
+      id: "main_plan",
+      name: "Principal",
+      price: 11.99,
+      frequency: "mês",
+      moneyType: "R$",
+      features: [
+        "Acesso ao dashboard de treinos",
+        "Timer de treino",
+        "Compartilhamento de treinos",
+        "Conquistas",
+      ],
+      observations: "7 dias de teste grátis",
+    },
+  ] as Plan[];
 
   return (
     <main className="min-h-screen bg-white text-gray-900">
@@ -53,7 +108,9 @@ export default function LandingPage() {
               Uma aplicação para te auxiliar nos seus treinos de natação
             </h1>
             <p className="max-w-xl text-sm opacity-90 text-start">
-              Já pensou em não ter que ficar contando voltas na piscina? Poder registrar seus treinos sem precisar de um relógio caro? Com o AquaTimer, você pode!
+              Já pensou em não ter que ficar contando voltas na piscina? Poder
+              registrar seus treinos sem precisar de um relógio caro? Com o
+              AquaTimer, você pode!
             </p>
             <div className="flex gap-4 w-full">
               <Link href="/sign-in" className="w-full">
@@ -70,7 +127,7 @@ export default function LandingPage() {
           <div className="flex flex-wrap justify-center items-center gap-6">
             <div className="relative w-65 md:w-70 lg:w-110 h-auto">
               <Image
-                src={Image01}
+                src={ImageBase}
                 alt="Descrição da imagem"
                 className="w-full h-auto object-contain"
                 priority
@@ -90,6 +147,9 @@ export default function LandingPage() {
             key={i}
             className="bg-gray-50 rounded-2xl shadow-md p-8 text-center hover:shadow-xl transition"
           >
+            <div className="mb-4 w-full flex justify-center text-[#3A36DB]">
+              {feature.icon}
+            </div>
             <h3 className="text-2xl font-semibold text-[#3A36DB]">
               {feature.title}
             </h3>
@@ -116,17 +176,28 @@ export default function LandingPage() {
         </div>
       </section>
 
+      {/* Images of Features */}
+      <section
+        id="features-images"
+        className="overflow-x-auto flex justify-center w-full"
+      >
+        <div className="w-full flex px-6 py-20 max-w-8xl gap-3 max-md:grid max-md:grid-cols-2 lg:px-20 ">
+          {featuresImages.map((feature, i) => (
+            <div key={i} className="flex items-center">
+              <Image src={feature.image} alt={feature.title} priority />
+            </div>
+          ))}
+        </div>
+      </section>
+
       {/* Call to Action */}
       <section
         id="cta"
-        className="flex items-center justify-center flex-col px-6 py-20 text-center bg-[#3A36DB] text-white"
+        className="flex items-center justify-center flex-col px-6 py-20 text-center bg-[#F3F4F6] text-gray-900"
       >
         <h2 className="text-4xl font-bold">Pronto para começar?</h2>
-        <p className="mt-4 text-lg opacity-90">
-          Em breve, os planos estarão disponíveis. Fique atento!
-        </p>
-        <div className="mt-8 max-w-[50%]">
-          <Button color="yellow">Em breve!</Button>
+        <div className="mt-8 flex w-full justify-center">
+          <PlanCard plans={plans} />
         </div>
       </section>
 
