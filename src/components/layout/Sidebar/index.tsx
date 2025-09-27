@@ -72,7 +72,7 @@ export default function Sidebar() {
       >
         <div className="flex items-center gap-2 mb-10 px-5">
           <BiSwim className="text-2xl" />
-          <h2 className="text-lg font-bold">GoSwim</h2>
+          <h2 className="text-lg font-bold">AquaTimer</h2>
         </div>
         <nav className="px-2 flex flex-col justify-between h-full">
           <div className="flex flex-col gap-2 w-full">

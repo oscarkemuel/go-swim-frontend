@@ -16,8 +16,8 @@ const robotoMono = Roboto_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Go Swim",
-  description: "A platform to track and manage your swimming workouts",
+  title: "AquaTimer",
+  description: "Um aplicativo para controle de tempo de treinos de natação",
 };
 
 export default function RootLayout({

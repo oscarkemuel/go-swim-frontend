@@ -125,6 +125,7 @@ export default function ResetPasswordForm() {
         isLoading={resetPassword.isPending}
         color="white"
         variant="outlined"
+        disabled={isSuccess}
       >
         Redefinir senha
       </Button>

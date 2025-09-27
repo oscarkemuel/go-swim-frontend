@@ -1,6 +1,5 @@
 import { Button } from "@/components/lib/Button";
-import Image1 from "@/../public/images/about-image-01.png";
-import Image2 from "@/../public/images/about-image-02.png";
+import Image01 from "@/../public/images/about-image.svg";
 import Image from "next/image";
 import Link from "next/link";
 import Header from "../Header";
@@ -54,7 +53,7 @@ export default function LandingPage() {
               Uma aplicação para te auxiliar nos seus treinos de natação
             </h1>
             <p className="max-w-xl text-sm opacity-90 text-start">
-              Já pensou em não ter que ficar contando voltas na piscina? Poder registrar seus treinos sem precisar de um relógio caro? Com o Go Swim, você pode!
+              Já pensou em não ter que ficar contando voltas na piscina? Poder registrar seus treinos sem precisar de um relógio caro? Com o AquaTimer, você pode!
             </p>
             <div className="flex gap-4 w-full">
               <Link href="/sign-in" className="w-full">
@@ -69,20 +68,12 @@ export default function LandingPage() {
           </div>
 
           <div className="flex flex-wrap justify-center items-center gap-6">
-            <div className="relative w-40 md:w-56 lg:w-64 h-auto">
+            <div className="relative w-65 md:w-70 lg:w-110 h-auto">
               <Image
-                src={Image1}
+                src={Image01}
                 alt="Descrição da imagem"
                 className="w-full h-auto object-contain"
                 priority
-              />
-            </div>
-
-            <div className="relative w-40 md:w-56 lg:w-64 h-auto rotate-12 -mt-5">
-              <Image
-                src={Image2}
-                alt="Descrição da imagem"
-                className="w-full h-auto object-contain max-sm:mt-4"
               />
             </div>
           </div>

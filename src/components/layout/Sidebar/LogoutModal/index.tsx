@@ -21,7 +21,7 @@ export default function LogoutModal(props: LogoutModalProps) {
   return (
     <Modal
       {...props}
-      title={`Sair do Go Swim`}
+      title={`Sair do AquaTimer`}
       subtitle="Você será redirecionado para a página de login"
       disableOverlayClick={logout.isPending}
     >

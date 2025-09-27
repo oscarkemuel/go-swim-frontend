@@ -13,7 +13,7 @@ export default function Header() {
       <div className="flex items-center justify-between px-6 py-4">
         {/* Logo */}
         <Link href="/home" className="text-2xl font-bold text-[#3A36DB]">
-          Go Swim
+          AquaTimer
         </Link>
 
         {/* Desktop Nav */}
